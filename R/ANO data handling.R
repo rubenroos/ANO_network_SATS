@@ -92,24 +92,7 @@ length(levels(as.factor(ANO.geo$ano_flate_id)))
 length(levels(as.factor(ANO.geo$ano_punkt_id)))
 summary(as.factor(ANO.geo$ano_punkt_id))
 # there's a triple and many double presences, probably some wrong registrations of point numbers,
-# but also double registrations (e.g. ANO0159_55)
-
-# four points that are double
-ANO.geo[ANO.geo$ano_punkt_id=="ANO0159_55",] # double registration, said so in comment. -> choose row 207 over 206
-#ANO.geo <- ANO.geo[-206,]
-#row.names(ANO.geo) <- 1:nrow(ANO.geo) # update row-numbers
-ANO.geo[ANO.geo$ano_punkt_id=="ANO0283_22",] # 2019 & 2021. Lot of NA's in 2019 -> omit 2019
-#ANO.geo <- ANO.geo[-156,]
-#row.names(ANO.geo) <- 1:nrow(ANO.geo) # update row-numbers
-ANO.geo[ANO.geo$ano_punkt_id=="ANO0363_24",]
-ANO.geo[ANO.geo$ano_flate_id=="ANO0363","ano_punkt_id"] # point-ID 15 is missing, but 24 is double. Likely that registrations are valid, but wrong point-ID.  -> keep both, call the second obs the one that's missing
-#ANO.geo[311,"ano_punkt_id"] <- "ANO0363_15"
-ANO.geo[ANO.geo$ano_punkt_id=="ANO1550_64",] # point-ID 66 is missing, but 64 is double. Likely that registrations are valid, but wrong point-ID.  -> keep both
-ANO.geo[ANO.geo$ano_flate_id=="ANO1550","ano_punkt_id"] # point-ID 66 is missing, but 64 is double. Likely that registrations are valid, but wrong point-ID.  -> keep both
-#ANO.geo[1273,"ano_punkt_id"] <- "ANO1550_66"
-
-
-
+# but also double registrations
 
 
 
@@ -122,6 +105,15 @@ ANO.sp$Species <- str_to_title(ANO.sp$Species) # make first letter capital
 #ANO.sp$Species <- gsub("_", " ", ANO.sp$Species) # replace underscore with space
 ANO.sp$Species <- gsub("( .*)","\\L\\1",ANO.sp$Species,perl=TRUE) # make capital letters after hyphon to lowercase
 ANO.sp$Species <- gsub("( .*)","\\L\\1",ANO.sp$Species,perl=TRUE) # make capital letters after space to lowercase
+unique(as.factor(ANO.sp$Species))
+ANO.sp$Species <- gsub("\u0097", "", ANO.sp$Species) # remove \u0097
+
+nnn <- "Potentilla \u0097suberecta"
+gsub("\u0097", "", nnn)
+
+gsub("\u0097", "", paste(ANO.sp$Species[27]))
+# don't understand the problem
+
 
 
 # fix species names
