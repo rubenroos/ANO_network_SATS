@@ -106,67 +106,13 @@ ANO.sp$Species <- str_to_title(ANO.sp$Species) # make first letter capital
 ANO.sp$Species <- gsub("( .*)","\\L\\1",ANO.sp$Species,perl=TRUE) # make capital letters after hyphon to lowercase
 ANO.sp$Species <- gsub("( .*)","\\L\\1",ANO.sp$Species,perl=TRUE) # make capital letters after space to lowercase
 unique(as.factor(ANO.sp$Species))
-ANO.sp$Species <- gsub("\u0097", "", ANO.sp$Species) # remove \u0097
-
-nnn <- "Potentilla \u0097suberecta"
-gsub("\u0097", "", nnn)
-
-gsub("\u0097", "", paste(ANO.sp$Species[27]))
-# don't understand the problem
+ANO.sp$Species <- gsub("�\u0097", "", ANO.sp$Species) # remove �\0097
+unique(as.factor(ANO.sp$Species))
+# removal does not work
+# \u0097 stands for the special x, so these species are all hybrids
 
 
-
-# fix species names
+# fix typos in species names
 ANO.sp <- ANO.sp %>% 
-  mutate(Species=str_replace(Species,"Arctous alpinus", "Arctous alpina")) %>%
-  mutate(Species=str_replace(Species,"Betula tortuosa", "Betula pubescens")) %>%
-  mutate(Species=str_replace(Species,"Blysmopsis rufa", "Blysmus rufus")) %>%
-  mutate(Species=str_replace(Species,"Cardamine nymanii", "Cardamine pratensis")) %>%
-  mutate(Species=str_replace(Species,"Carex adelostoma", "Carex buxbaumii")) %>%
-  mutate(Species=str_replace(Species,"Carex leersii", "Carex echinata")) %>%
-  mutate(Species=str_replace(Species,"Carex paupercula", "Carex magellanica")) %>%
-  mutate(Species=str_replace(Species,"Carex simpliciuscula", "Kobresia simpliciuscula")) %>%
-  mutate(Species=str_replace(Species,"Carex viridula", "Carex flava")) %>%
-  mutate(Species=str_replace(Species,"Chamaepericlymenum suecicum", "Cornus suecia")) %>%
-  mutate(Species=str_replace(Species,"Cicerbita alpina", "Lactuca alpina")) %>%
-  mutate(Species=str_replace(Species,"Empetrum hermaphroditum", "Empetrum nigrum")) %>%
-  mutate(Species=str_replace(Species,"Festuca prolifera", "Festuca rubra")) %>%
-  mutate(Species=str_replace(Species,"Galium album", "Galium mollugo")) %>%
-  mutate(Species=str_replace(Species,"Galium elongatum", "Galium palustre")) %>%
-  mutate(Species=str_replace(Species,"Helictotrichon pratense", "Avenula pratensis")) %>%
-  mutate(Species=str_replace(Species,"Helictotrichon pubescens", "Avenula pubescens")) %>%
-  mutate(Species=str_replace(Species,"Hieracium alpina", "Hieracium Alpina")) %>%
-  mutate(Species=str_replace(Species,"Hieracium alpinum", "Hieracium Alpina")) %>%
-  mutate(Species=str_replace(Species,"Hieracium hieracium", "Hieracium Hieracium")) %>%
-  mutate(Species=str_replace(Species,"Hieracium hieracioides", "Hieracium umbellatum")) %>%
-  mutate(Species=str_replace(Species,"Hieracium murorum", "Hieracium Vulgata")) %>%
-  mutate(Species=str_replace(Species,"Hieracium oreadea", "Hieracium Oreadea")) %>%
-  mutate(Species=str_replace(Species,"Hieracium prenanthoidea", "Hieracium Prenanthoidea")) %>%
-  mutate(Species=str_replace(Species,"Hieracium vulgata", "Hieracium Vulgata")) %>%
-  mutate(Species=str_replace(Species,"Hieracium pilosella", "Pilosella officinarum")) %>%
-  mutate(Species=str_replace(Species,"Hieracium vulgatum", "Hieracium umbellatum")) %>%
-  mutate(Species=str_replace(Species,"Hierochloã« alpina", "Hierochloë alpina")) %>%
-  mutate(Species=str_replace(Species,"Hierochloã« hirta", "Hierochloë hirta")) %>%
-  mutate(Species=str_replace(Species,"Hierochloã« odorata", "Hierochloë odorata")) %>%
-  mutate(Species=str_replace(Species,"Listera cordata", "Neottia cordata")) %>%
-  mutate(Species=str_replace(Species,"Leontodon autumnalis", "Scorzoneroides autumnalis")) %>%
-  mutate(Species=str_replace(Species,"Loiseleuria procumbens", "Kalmia procumbens")) %>%
-  mutate(Species=str_replace(Species,"Mycelis muralis", "Lactuca muralis")) %>%
-  mutate(Species=str_replace(Species,"Omalotheca supina", "Gnaphalium supinum")) %>%
-  mutate(Species=str_replace(Species,"Omalotheca norvegica", "Gnaphalium norvegicum")) %>%
-  mutate(Species=str_replace(Species,"Omalotheca sylvatica", "Gnaphalium sylvaticum")) %>%
-  mutate(Species=str_replace(Species,"Oreopteris limbosperma", "Thelypteris limbosperma")) %>%
-  mutate(Species=str_replace(Species,"Oxycoccus microcarpus", "Vaccinium microcarpum")) %>%
-  mutate(Species=str_replace(Species,"Oxycoccus palustris", "Vaccinium oxycoccos")) %>%
-  mutate(Species=str_replace(Species,"Phalaris minor", "Phalaris arundinacea")) %>%
-  mutate(Species=str_replace(Species,"Pinus unicinata", "Pinus mugo")) %>%
-  mutate(Species=str_replace(Species,"Poa alpigena", "Poa pratensis")) %>%
-  mutate(Species=str_replace(Species,"Poa angustifolia", "Poa pratensis")) %>%
-  mutate(Species=str_replace(Species,"Pyrola grandiflora", "Pyrola rotundifolia")) %>%
-  mutate(Species=str_replace(Species,"Rumex alpestris", "Rumex acetosa")) %>%
-  mutate(Species=str_replace(Species,"Syringa emodi", "Syringa vulgaris")) %>%
-  mutate(Species=str_replace(Species,"Taraxacum crocea", "Taraxacum officinale")) %>%
-  mutate(Species=str_replace(Species,"Taraxacum croceum", "Taraxacum officinale")) %>%
-  mutate(Species=str_replace(Species,"Trientalis europaea", "Lysimachia europaea")) %>%
-  mutate(Species=str_replace(Species,"Trifolium pallidum", "Trifolium pratense"))
+  mutate(Species=str_replace(Species,"Linnaea borealis", "Linnea borealis"))
 
