@@ -1,24 +1,17 @@
 library(sf)
-library(tidyr)
-library(dplyr)
-library(stringr)
 library(tidyverse)
 
+
+
 #### download from kartkatalogen to P-drive ####
-# url <- "https://nedlasting.miljodirektoratet.no/naturovervaking/naturovervaking_eksport.gdb.zip"
-download(url, dest="P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb.zip", mode="w") 
-unzip ("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb.zip", 
-       exdir = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb2")
-
-st_layers(dsn = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb2")
-
-# SOMETHING NOT WORKING YET
-
-
+#url <- "https://nedlasting.miljodirektoratet.no/naturovervaking/naturovervaking_eksport.gdb.zip"
+#download(url, dest="P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb.zip", mode="w") 
+#unzip ("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb.zip", 
+#       exdir = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb")
 
 #### upload data from P-drive ####
 ## ANO
-st_layers(dsn = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb")
+#st_layers(dsn = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb")
 ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
                   layer="ANO_Art")
 ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
@@ -91,8 +84,8 @@ unique(ANO.geo$slitasje)
 length(levels(as.factor(ANO.geo$ano_flate_id)))
 length(levels(as.factor(ANO.geo$ano_punkt_id)))
 summary(as.factor(ANO.geo$ano_punkt_id))
-# there's a triple and many double presences, probably some wrong registrations of point numbers,
-# but also double registrations
+# there's a triple and many double presences, 
+# probably some wrong registrations of point numbers, but also double registrations
 
 
 
@@ -111,8 +104,34 @@ unique(as.factor(ANO.sp$Species))
 # removal does not work
 # \u0097 stands for the special x, so these species are all hybrids
 
+# remove NA's from Species column
+ANO.sp <- ANO.sp %>% filter(!is.na(Species))
 
 # fix typos in species names
 ANO.sp <- ANO.sp %>% 
   mutate(Species=str_replace(Species,"Linnaea borealis", "Linnea borealis"))
+ANO.sp <- ANO.sp %>% 
+  mutate(Species=str_replace(Species,"Carex simpliciuscula", "Kobresia simpliciuscula"))
+ANO.sp <- ANO.sp %>% 
+  mutate(Species=str_replace(Species,"Chamerion angustifolium", "Chamaenerion simpliciuscula"))
 
+
+
+# implement Odd's suggestions for taxonomy
+# things to remove
+ANO.sp <- ANO.sp %>% 
+  filter(!str_detect(Species, c('Agrostis vinealis','Carex sp..','Cotoneaster sp.',
+                               'Epilobium sp.','Euphrasia sp.','Festuca sp.',
+                               'Juncus sp.','Poa sp.','Salix sp.','Sorbus sp.')))
+# things to aggregate
+ANO.sp$Species <- gsub(".*Hieracium.*", "Hieracium sp.", ANO.sp$Species)
+
+ANO.sp <- ANO.sp %>% 
+  mutate(Species=str_replace(Species,"Alchemilla alpina", "Blchemilla alpina"))
+ANO.sp$Species <- gsub(".*Alchemilla.*", "Alchemilla sp.", ANO.sp$Species)
+ANO.sp <- ANO.sp %>% 
+  mutate(Species=str_replace(Species,"Blchemilla alpina", "Alchemilla alpina"))
+
+
+ANO.sp %>% 
+  filter(str_detect(Species, 'Astragalus'))  
