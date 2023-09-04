@@ -1,4 +1,8 @@
 library(sf)
+library(raster)
+library(terra)
+library(stars)
+library(tmap)
 library(tidyverse)
 
 
@@ -17,7 +21,8 @@ ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturover
 ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
                    layer="ANO_SurveyPoint")
 
-#### upload fjell mask ####
+#### upload mountain map ####
+
 
 #### data handling - ANO data ####
 head(ANO.sp)
