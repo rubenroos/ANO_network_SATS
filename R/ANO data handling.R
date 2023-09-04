@@ -17,6 +17,7 @@ ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturover
 ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
                    layer="ANO_SurveyPoint")
 
+#### upload fjell mask ####
 
 #### data handling - ANO data ####
 head(ANO.sp)
@@ -87,7 +88,13 @@ summary(as.factor(ANO.geo$ano_punkt_id))
 # there's a triple and many double presences, 
 # probably some wrong registrations of point numbers, but also double registrations
 
-
+## workaround for being able to make ANO.geo derived data frames further down the line into satial objects
+# store coords from SHAPE as separate variables
+ANO.geo <- ANO.geo %>%
+  mutate(lat = st_coordinates(.)[,1],
+         long = st_coordinates(.)[,2])
+# store CRS
+ANO.geo.crs <- st_crs(ANO.geo)
 
 # fix species variable
 ANO.sp$Species <- ANO.sp$art_navn
@@ -99,10 +106,9 @@ ANO.sp$Species <- str_to_title(ANO.sp$Species) # make first letter capital
 ANO.sp$Species <- gsub("( .*)","\\L\\1",ANO.sp$Species,perl=TRUE) # make capital letters after hyphon to lowercase
 ANO.sp$Species <- gsub("( .*)","\\L\\1",ANO.sp$Species,perl=TRUE) # make capital letters after space to lowercase
 unique(as.factor(ANO.sp$Species))
-ANO.sp$Species <- gsub("�\u0097", "", ANO.sp$Species) # remove �\0097
-unique(as.factor(ANO.sp$Species))
-# removal does not work
-# \u0097 stands for the special x, so these species are all hybrids
+# remove hybrids
+ANO.sp <- ANO.sp %>% 
+  filter(!str_detect(Species,'×'))
 
 # remove NA's from Species column
 ANO.sp <- ANO.sp %>% filter(!is.na(Species))
@@ -114,15 +120,23 @@ ANO.sp <- ANO.sp %>%
   mutate(Species=str_replace(Species,"Carex simpliciuscula", "Kobresia simpliciuscula"))
 ANO.sp <- ANO.sp %>% 
   mutate(Species=str_replace(Species,"Chamerion angustifolium", "Chamaenerion simpliciuscula"))
-
-
+ANO.sp <- ANO.sp %>% 
+  mutate(Species=str_replace(Species,"Helictotrichon", "Avenula"))
+ANO.sp <- ANO.sp %>% 
+  mutate(Species=str_replace(Species,"Taraxacum croceum", "Taraxacum crocea"))
 
 # implement Odd's suggestions for taxonomy
 # things to remove
-ANO.sp <- ANO.sp %>% 
-  filter(!str_detect(Species, c('Agrostis vinealis','Carex sp..','Cotoneaster sp.',
-                               'Epilobium sp.','Euphrasia sp.','Festuca sp.',
-                               'Juncus sp.','Poa sp.','Salix sp.','Sorbus sp.')))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Agrostis vinealis'))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Carex sp.'))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Cotoneaster sp.'))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Epilobium sp.'))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Euphrasia sp.'))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Festuca sp.'))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Juncus sp.'))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Poa sp.'))
+ANO.sp <- ANO.sp %>% filter(!str_detect(Species, 'Salix sp.'))
+
 # things to aggregate
 ANO.sp$Species <- gsub(".*Hieracium.*", "Hieracium sp.", ANO.sp$Species)
 
@@ -132,6 +146,25 @@ ANO.sp$Species <- gsub(".*Alchemilla.*", "Alchemilla sp.", ANO.sp$Species)
 ANO.sp <- ANO.sp %>% 
   mutate(Species=str_replace(Species,"Blchemilla alpina", "Alchemilla alpina"))
 
+head(ANO.sp)
 
-ANO.sp %>% 
-  filter(str_detect(Species, 'Astragalus'))  
+## adding information on ecosystem and condition variables
+ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning")],
+                y=ANO.geo[,c("GlobalID","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
+                             "hovedoekosystem_punkt","hovedtype_rute","kartleggingsenhet_1m2",
+                             "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
+                             "tungekjoretoy","slitasje",
+                             "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning",
+                             "SHAPE")],
+                by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
+names(ANO.dat)
+# remove communities which did not match an ANO point (should not happen, but does)
+dim(ANO.dat[is.na(ANO.dat$ano_punkt_id),])
+ANO.dat <- ANO.dat[!is.na(ANO.dat$ano_punkt_id),]
+# making it into a wider format
+ANO.dat <- ANO.dat %>% 
+  pivot_wider(names_from=Species,values_from=art_dekning)
+names(ANO.dat)
+
+## adding geometry again
+ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
