@@ -1,6 +1,5 @@
 library(sf)
 library(raster)
-library(terra)
 library(stars)
 library(tmap)
 library(tidyverse)
@@ -93,13 +92,15 @@ summary(as.factor(ANO.geo$ano_punkt_id))
 # there's a triple and many double presences, 
 # probably some wrong registrations of point numbers, but also double registrations
 
-## workaround for being able to make ANO.geo derived data frames further down the line into satial objects
-# store coords from SHAPE as separate variables
-ANO.geo <- ANO.geo %>%
-  mutate(lat = st_coordinates(.)[,1],
-         long = st_coordinates(.)[,2])
+## workaround for being able to make ANO.geo derived data frames further down the line into spatial objects
+
 # store CRS
 ANO.geo.crs <- st_crs(ANO.geo)
+# store coords from SHAPE as separate variables and drop geometry
+ANO.geo <- ANO.geo %>%
+  mutate(lat = st_coordinates(.)[,1],
+         long = st_coordinates(.)[,2]) %>%
+  st_drop_geometry()
 
 # fix species variable
 ANO.sp$Species <- ANO.sp$art_navn
@@ -166,10 +167,12 @@ names(ANO.dat)
 # remove communities which did not match an ANO point (should not happen, but does)
 dim(ANO.dat[is.na(ANO.dat$ano_punkt_id),])
 ANO.dat <- ANO.dat[!is.na(ANO.dat$ano_punkt_id),]
+
 # making it into a wider format
 ANO.dat <- ANO.dat %>% 
   pivot_wider(names_from=Species,values_from=art_dekning)
 names(ANO.dat)
 
-## adding geometry again
+
+## adding geometry
 ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
