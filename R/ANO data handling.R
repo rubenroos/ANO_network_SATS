@@ -191,6 +191,7 @@ colnames(ANO.dat)[23] <- "veg_zone"
 # filter out all veg-zones that are not alpine
 ANO.fjell <- ANO.dat %>% filter(veg_zone>=2)
 
+
 ## check that every point is present only once
 length(levels(as.factor(ANO.fjell$ano_flate_id)))
 length(levels(as.factor(ANO.fjell$ano_punkt_id)))
