@@ -91,7 +91,6 @@ length(levels(as.factor(ANO.geo$ano_punkt_id)))
 summary(as.factor(ANO.geo$ano_punkt_id))
 # there's a triple and many double presences, 
 # probably some wrong registrations of point numbers, but also double registrations
-
 ## workaround for being able to make ANO.geo derived data frames further down the line into spatial objects
 
 # store CRS
@@ -114,7 +113,7 @@ ANO.sp$Species <- gsub("( .*)","\\L\\1",ANO.sp$Species,perl=TRUE) # make capital
 unique(as.factor(ANO.sp$Species))
 # remove hybrids
 ANO.sp <- ANO.sp %>% 
-  filter(!str_detect(Species,'×'))
+  filter(!str_detect(Species,'×')) #symbol "×" not recognized by my version of R, so these species ar enot removed
 
 # remove NA's from Species column
 ANO.sp <- ANO.sp %>% filter(!is.na(Species))
@@ -160,19 +159,28 @@ ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning")],
                              "hovedoekosystem_punkt","hovedtype_rute","kartleggingsenhet_1m2",
                              "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
                              "tungekjoretoy","slitasje",
-                             "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning",
-                             "SHAPE")],
+                             "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning"
+                             )],#removed "SHAPE" which didn't exist in the dataset
                 by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
 names(ANO.dat)
+
 # remove communities which did not match an ANO point (should not happen, but does)
 dim(ANO.dat[is.na(ANO.dat$ano_punkt_id),])
 ANO.dat <- ANO.dat[!is.na(ANO.dat$ano_punkt_id),]
 
-# making it into a wider format
-ANO.dat <- ANO.dat %>% 
-  pivot_wider(names_from=Species,values_from=art_dekning)
-names(ANO.dat)
+test <- filter(ANO.dat, ano_punkt_id == "ANO0436_66")
 
+# making it into a wider format, remove duplicates first
+ANO.dat <- ANO.dat %>% 
+  distinct(ano_punkt_id,Species, .keep_all = TRUE) %>% #added this line to remove duplicates
+  pivot_wider(names_from=Species,values_from=art_dekning)
+
+names(ANO.dat)
 
 ## adding geometry
 ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
+
+## write data
+write.csv(ANO.dat, "Data/ANO.dat.RR.csv")
+
+

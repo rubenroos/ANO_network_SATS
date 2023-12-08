@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ANO habitat-species networks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="ANO networks_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ANO networks_files/libs/quarto-html/quarto.js"></script>
+<script src="ANO networks_files/libs/quarto-html/popper.min.js"></script>
+<script src="ANO networks_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ANO networks_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ANO networks_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ANO networks_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ANO networks_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ANO networks_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ANO networks_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ANO habitat-species networks</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="building-habitat-species-networks-using-ano-data" class="level2">
+<h2 class="anchored" data-anchor-id="building-habitat-species-networks-using-ano-data">Building habitat-species networks using ANO data</h2>
+<p>Ruben E. Roos, Joachim Töpper</p>
+</section>
+<section id="running-code" class="level2">
+<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
+<section id="interesting-reading-material" class="level3">
+<h3 class="anchored" data-anchor-id="interesting-reading-material">Interesting reading material</h3>
+<p>https://cran.r-project.org/web/packages/bipartite/vignettes/Intro2bipartite.pdf</p>
+</section>
+<section id="for-fixing-errors-when-reading-scandinavian-letters" class="level3">
+<h3 class="anchored" data-anchor-id="for-fixing-errors-when-reading-scandinavian-letters">For fixing errors when reading Scandinavian letters</h3>
+<p>https://www.r-bloggers.com/2013/01/r-and-foreign-characters</p>
+<p>https://community.rstudio.com/t/possible-bug-non-ascii-characters-not-displayed-properly-in-the-rstudio-release-2021-09-02/126312/2</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.setlocale</span>(<span class="at">locale=</span><span class="st">'no_NB.utf8'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "LC_COLLATE=no_NB.utf8;LC_CTYPE=no_NB.utf8;LC_MONETARY=no_NB.utf8;LC_NUMERIC=C;LC_TIME=no_NB.utf8"</code></pre>
+</div>
+</div>
+</section>
+<section id="load-required-packages" class="level3">
+<h3 class="anchored" data-anchor-id="load-required-packages">Load required packages</h3>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                          ParentGlobalID ano_flate_id ano_punkt_id    lat
+1 {0007EF7C-B13D-4950-B8AD-9FDADBEA6311}      ANO0420   ANO0420_51 151550
+2 {000C0CB5-9214-4CF4-98EC-84CBCC1F5C83}      ANO1478   ANO1478_51 189550
+3 {00143A64-1CDB-44F2-9E90-FA9533B8FCB2}      ANO0413   ANO0413_26  34450
+4 {00151F09-C2EA-4904-BBB8-EE51D338E07F}      ANO0958   ANO0958_44 179790
+5 {001A312C-CDD6-44D2-9137-D389EE43E557}      ANO1057   ANO1057_55  92870
+6 {001A3476-6915-4A27-9397-F9F661069AE9}      ANO0020   ANO0020_51 -12450
+     long     ssb_id  aar hovedoekosystem_punkt hovedtype_rute
+1 6770370 2.1515e+13 2021                 fjell             T3
+2 6838870 2.1895e+13 2021    semi_naturlig_mark            T31
+3 6850130 2.0340e+13 2021                  skog             T4
+4 6618790 2.1795e+13 2020                  &lt;NA&gt;             T4
+5 6932870 2.0925e+13 2021                  skog             T4
+6 6550870 1.9875e+13 2019    semi_naturlig_mark            T31
+  kartleggingsenhet_1m2 groeftingsintensitet bruksintensitet beitetrykk
+1                T3-C-6                   NA              NA          2
+2               T31-C-2                   NA               3          2
+3                T4-C-1                   NA              NA          2
+4                T4-C-1                   NA              NA          1
+5                T4-C-6                   NA              NA          2
+6               T31-C-2                   NA               1          1
+  slatteintensitet tungekjoretoy slitasje vedplanter_total_dekning
+1               NA             0        0                       30
+2                1            NA       NA                       NA
+3               NA             0       NA                       75
+4               NA             0       NA                       33
+5               NA             0       NA                       40
+6                1            NA       NA                        6
+  busker_dekning tresjikt_dekning roesslyng_dekning Festuca.ovina
+1              0                0                NA             1
+2             20                0                NA            NA
+3              5               25                NA            NA
+4              2               45                NA            NA
+5              8               50                NA            NA
+6              4                0                NA            NA
+  Vaccinium.myrtillus Diphasiastrum.alpinum Hieracium.sp. Juncus.trifidus
+1                26.0                     4           3.0               5
+2                 2.0                    NA            NA              NA
+3                 4.0                    NA            NA              NA
+4                 0.1                    NA           0.1              NA
+5                25.0                    NA            NA              NA
+6                 0.1                    NA            NA              NA
+  Avenella.flexuosa Anthoxanthum.odoratum Betula.nana Vaccinium.vitis.idaea
+1                 7                   3.0          NA                    NA
+2                 2                    NA          20                     1
+3                NA                    NA          NA                    NA
+4                NA                    NA          NA                     1
+5                 2                   0.1          NA                     8
+6                NA                    NA          NA                     1
+  Juniperus.communis Luzula.pilosa Vaccinium.uliginosum Empetrum.nigrum
+1                 NA            NA                   NA              NA
+2                  1           1.0                    2              25
+3                 NA            NA                   NA              15
+4                 NA           0.1                   NA              NA
+5                 NA           2.0                   NA              15
+6                 NA            NA                   NA              NA
+  Gymnocarpium.dryopteris Rubus.idaeus Melampyrum.pratense Maianthemum.bifolium
+1                      NA           NA                  NA                   NA
+2                      NA           NA                  NA                   NA
+3                     0.1           NA                  NA                   NA
+4                      NA          0.1                   1                  3.0
+5                    10.0           NA                   1                  0.1
+6                      NA           NA                  NA                   NA
+  Lysimachia.europaea Lycopodium.annotinum Melica.nutans Anemone.nemorosa
+1                  NA                   NA            NA               NA
+2                  NA                   NA            NA               NA
+3                  NA                   NA            NA               NA
+4                   1                    4           0.1              0.1
+5                   1                   NA            NA              1.0
+6                  NA                   NA            NA               NA
+  Chamaepericlymenum.suecicum Pyrola.media Sorbus.aucuparia Lycopodium.clavatum
+1                          NA           NA               NA                  NA
+2                          NA           NA               NA                  NA
+3                          NA           NA               NA                  NA
+4                          NA           NA               NA                  NA
+5                           5            1                2                   2
+6                          NA           NA               NA                  NA
+  Pteridium.aquilinum Viola.riviniana Linnea.borealis Betula.pubescens
+1                  NA              NA              NA               NA
+2                  NA              NA              NA               NA
+3                  NA              NA              NA               NA
+4                  NA              NA              NA               NA
+5                   6               2               5                1
+6                  NA              NA              NA               NA
+  Trichophorum.cespitosum Nardus.stricta Molinia.caerulea Carex.panicea
+1                      NA             NA               NA            NA
+2                      NA             NA               NA            NA
+3                      NA             NA               NA            NA
+4                      NA             NA               NA            NA
+5                      NA             NA               NA            NA
+6                      21             13               31            11
+  Potentilla.erecta Carex.bigelowii Rumex.acetosa Calamagrostis.phragmitoides
+1                NA              NA            NA                          NA
+2                NA              NA            NA                          NA
+3                NA              NA            NA                          NA
+4                NA              NA            NA                          NA
+5                NA              NA            NA                          NA
+6                 6              NA            NA                          NA
+  Viola.biflora Stellaria.nemorum Athyrium.filix.femina Geranium.sylvaticum
+1            NA                NA                    NA                  NA
+2            NA                NA                    NA                  NA
+3            NA                NA                    NA                  NA
+4            NA                NA                    NA                  NA
+5            NA                NA                    NA                  NA
+6            NA                NA                    NA                  NA
+  Valeriana.sambucifolia Paris.quadrifolia Anthriscus.sylvestris
+1                     NA                NA                    NA
+2                     NA                NA                    NA
+3                     NA                NA                    NA
+4                     NA                NA                    NA
+5                     NA                NA                    NA
+6                     NA                NA                    NA
+  Solidago.virgaurea Chamaenerion.angustifolium Selaginella.selaginoides
+1                 NA                         NA                       NA
+2                 NA                         NA                       NA
+3                 NA                         NA                       NA
+4                 NA                         NA                       NA
+5                 NA                         NA                       NA
+6                 NA                         NA                       NA
+  Oxalis.acetosella Thalictrum.alpinum Picea.abies Campanula.rotundifolia
+1                NA                 NA          NA                     NA
+2                NA                 NA          NA                     NA
+3                NA                 NA          NA                     NA
+4                NA                 NA          NA                     NA
+5                NA                 NA          NA                     NA
+6                NA                 NA          NA                     NA
+  Cicerbita.alpina Rubus.saxatilis Melampyrum.sylvaticum
+1               NA              NA                    NA
+2               NA              NA                    NA
+3               NA              NA                    NA
+4               NA              NA                    NA
+5               NA              NA                    NA
+6               NA              NA                    NA
+  Eriophorum.angustifolium Eriophorum.vaginatum Bartsia.alpina Crepis.paludosa
+1                       NA                   NA             NA              NA
+2                       NA                   NA             NA              NA
+3                       NA                   NA             NA              NA
+4                       NA                   NA             NA              NA
+5                       NA                   NA             NA              NA
+6                       NA                   NA             NA              NA
+  Andromeda.polifolia Carex.flava Dactylorhiza.maculata Narthecium.ossifragum
+1                  NA          NA                    NA                    NA
+2                  NA          NA                    NA                    NA
+3                  NA          NA                    NA                    NA
+4                  NA          NA                    NA                    NA
+5                  NA          NA                    NA                    NA
+6                  NA          NA                    NA                    NA
+  Pinguicula.vulgaris Abies.alba Deschampsia.cespitosa Veronica.officinalis
+1                  NA         NA                    NA                   NA
+2                  NA         NA                    NA                   NA
+3                  NA         NA                    NA                   NA
+4                  NA         NA                    NA                   NA
+5                  NA         NA                    NA                   NA
+6                  NA         NA                    NA                   NA
+  Carex.vaginata Picea..lutzii Carex.hostiana Rubus.chamaemorus
+1             NA            NA             NA                NA
+2             NA            NA             NA                NA
+3             NA            NA             NA                NA
+4             NA            NA             NA                NA
+5             NA            NA             NA                NA
+6             NA            NA             NA                NA
+  Calluna.vulgaris Blechnum.spicant Veronica.chamaedrys Agrostis.capillaris
+1               NA               NA                  NA                  NA
+2               NA               NA                  NA                  NA
+3               NA               NA                  NA                  NA
+4               NA               NA                  NA                  NA
+5               NA               NA                  NA                  NA
+6               NA               NA                  NA                  NA
+  Carex.pilulifera Luzula.multiflora Oreopteris.limbosperma
+1               NA                NA                     NA
+2               NA                NA                     NA
+3               NA                NA                     NA
+4               NA                NA                     NA
+5               NA                NA                     NA
+6               NA                NA                     NA
+  Phegopteris.connectilis Poa.pratensis Carduus.crispus Myrica.gale
+1                      NA            NA              NA          NA
+2                      NA            NA              NA          NA
+3                      NA            NA              NA          NA
+4                      NA            NA              NA          NA
+5                      NA            NA              NA          NA
+6                      NA            NA              NA          NA
+  Listera.cordata Drosera.rotundifolia Erica.tetralix Carex.pauciflora
+1              NA                   NA             NA               NA
+2              NA                   NA             NA               NA
+3              NA                   NA             NA               NA
+4              NA                   NA             NA               NA
+5              NA                   NA             NA               NA
+6              NA                   NA             NA               NA
+  Carex.digitata Pinus.sylvestris Euphrasia.wettsteinii Omalotheca.norvegica
+1             NA               NA                    NA                   NA
+2             NA               NA                    NA                   NA
+3             NA               NA                    NA                   NA
+4             NA               NA                    NA                   NA
+5             NA               NA                    NA                   NA
+6             NA               NA                    NA                   NA
+  Potentilla.crantzii Tofieldia.pusilla Bistorta.vivipara
+1                  NA                NA                NA
+2                  NA                NA                NA
+3                  NA                NA                NA
+4                  NA                NA                NA
+5                  NA                NA                NA
+6                  NA                NA                NA
+  Anthoxanthum.nipponicum Trollius.europaeus Phyllodoce.caerulea
+1                      NA                 NA                  NA
+2                      NA                 NA                  NA
+3                      NA                 NA                  NA
+4                      NA                 NA                  NA
+5                      NA                 NA                  NA
+6                      NA                 NA                  NA
+  Ranunculus.acris Alchemilla.alpina Dryopteris.expansa Salix.herbacea
+1               NA                NA                 NA             NA
+2               NA                NA                 NA             NA
+3               NA                NA                 NA             NA
+4               NA                NA                 NA             NA
+5               NA                NA                 NA             NA
+6               NA                NA                 NA             NA
+  Poa.alpina Astragalus.alpinus Equisetum.variegatum Hierochloë.alpina
+1         NA                 NA                   NA                NA
+2         NA                 NA                   NA                NA
+3         NA                 NA                   NA                NA
+4         NA                 NA                   NA                NA
+5         NA                 NA                   NA                NA
+6         NA                 NA                   NA                NA
+  Arctostaphylos.uva.ursi Oxycoccus.microcarpus Harrimanella.hypnoides
+1                      NA                    NA                     NA
+2                      NA                    NA                     NA
+3                      NA                    NA                     NA
+4                      NA                    NA                     NA
+5                      NA                    NA                     NA
+6                      NA                    NA                     NA
+  Omalotheca.supina Viola.palustris Juncus.filiformis Luzula.confusa
+1                NA              NA                NA             NA
+2                NA              NA                NA             NA
+3                NA              NA                NA             NA
+4                NA              NA                NA             NA
+5                NA              NA                NA             NA
+6                NA              NA                NA             NA
+  Salix.lapponum Myosotis.scorpioides Urtica.dioica Filipendula.ulmaria
+1             NA                   NA            NA                  NA
+2             NA                   NA            NA                  NA
+3             NA                   NA            NA                  NA
+4             NA                   NA            NA                  NA
+5             NA                   NA            NA                  NA
+6             NA                   NA            NA                  NA
+  Fragaria.vesca Dryopteris.carthusiana Taraxacum.sp. Equisetum.pratense
+1             NA                     NA            NA                 NA
+2             NA                     NA            NA                 NA
+3             NA                     NA            NA                 NA
+4             NA                     NA            NA                 NA
+5             NA                     NA            NA                 NA
+6             NA                     NA            NA                 NA
+  Pyrola.grandiflora Equisetum.arvense Poa.nemoralis Pyrola.minor
+1                 NA                NA            NA           NA
+2                 NA                NA            NA           NA
+3                 NA                NA            NA           NA
+4                 NA                NA            NA           NA
+5                 NA                NA            NA           NA
+6                 NA                NA            NA           NA
+  Pedicularis.lapponica Saussurea.alpina Betula.tortuosa Huperzia.selago
+1                    NA               NA              NA              NA
+2                    NA               NA              NA              NA
+3                    NA               NA              NA              NA
+4                    NA               NA              NA              NA
+5                    NA               NA              NA              NA
+6                    NA               NA              NA              NA
+  Carex.nigra Agrostis.mertensii Menyanthes.trifoliata Alchemilla.sp.
+1          NA                 NA                    NA             NA
+2          NA                 NA                    NA             NA
+3          NA                 NA                    NA             NA
+4          NA                 NA                    NA             NA
+5          NA                 NA                    NA             NA
+6          NA                 NA                    NA             NA
+  Salix.glauca Galium.boreale Geum.rivale Carex.rostrata Carex.canescens
+1           NA             NA          NA             NA              NA
+2           NA             NA          NA             NA              NA
+3           NA             NA          NA             NA              NA
+4           NA             NA          NA             NA              NA
+5           NA             NA          NA             NA              NA
+6           NA             NA          NA             NA              NA
+  Carex.limosa Comarum.palustre Orthilia.secunda Carex.echinata
+1           NA               NA               NA             NA
+2           NA               NA               NA             NA
+3           NA               NA               NA             NA
+4           NA               NA               NA             NA
+5           NA               NA               NA             NA
+6           NA               NA               NA             NA
+  Scheuchzeria.palustris Drosera.anglica Arctous.alpina Micranthes.stellaris
+1                     NA              NA             NA                   NA
+2                     NA              NA             NA                   NA
+3                     NA              NA             NA                   NA
+4                     NA              NA             NA                   NA
+5                     NA              NA             NA                   NA
+6                     NA              NA             NA                   NA
+  Cerastium.cerastoides Oxyria.digyna Sagina.saginoides Saxifraga.rivularis
+1                    NA            NA                NA                  NA
+2                    NA            NA                NA                  NA
+3                    NA            NA                NA                  NA
+4                    NA            NA                NA                  NA
+5                    NA            NA                NA                  NA
+6                    NA            NA                NA                  NA
+  Juncus.effusus Equisetum.sylvaticum Carex.concolor Pedicularis.palustris
+1             NA                   NA             NA                    NA
+2             NA                   NA             NA                    NA
+3             NA                   NA             NA                    NA
+4             NA                   NA             NA                    NA
+5             NA                   NA             NA                    NA
+6             NA                   NA             NA                    NA
+  Equisetum.palustre Carex.aquatilis Kalmia.procumbens Alnus.incana
+1                 NA              NA                NA           NA
+2                 NA              NA                NA           NA
+3                 NA              NA                NA           NA
+4                 NA              NA                NA           NA
+5                 NA              NA                NA           NA
+6                 NA              NA                NA           NA
+  Lycopodiella.inundata Parnassia.palustris Carex.lasiocarpa Vicia.cracca
+1                    NA                  NA               NA           NA
+2                    NA                  NA               NA           NA
+3                    NA                  NA               NA           NA
+4                    NA                  NA               NA           NA
+5                    NA                  NA               NA           NA
+6                    NA                  NA               NA           NA
+  Scorzoneroides.autumnalis Achillea.millefolium Viola.canina Carex.saxatilis
+1                        NA                   NA           NA              NA
+2                        NA                   NA           NA              NA
+3                        NA                   NA           NA              NA
+4                        NA                   NA           NA              NA
+5                        NA                   NA           NA              NA
+6                        NA                   NA           NA              NA
+  Carex.dioica Phleum.alpinum Ranunculus.subborealis Juncus.arcticus
+1           NA             NA                     NA              NA
+2           NA             NA                     NA              NA
+3           NA             NA                     NA              NA
+4           NA             NA                     NA              NA
+5           NA             NA                     NA              NA
+6           NA             NA                     NA              NA
+  Viscaria.alpina Rubus.caesius Carex.brunnescens Salix.aurita
+1              NA            NA                NA           NA
+2              NA            NA                NA           NA
+3              NA            NA                NA           NA
+4              NA            NA                NA           NA
+5              NA            NA                NA           NA
+6              NA            NA                NA           NA
+  Oxycoccus.palustris Quercus.robur Erigeron.uniflorus Festuca.rubra
+1                  NA            NA                 NA            NA
+2                  NA            NA                 NA            NA
+3                  NA            NA                 NA            NA
+4                  NA            NA                 NA            NA
+5                  NA            NA                 NA            NA
+6                  NA            NA                 NA            NA
+  Carex.capillaris Carex.norvegica Saxifraga.oppositifolia Salix.lanata
+1               NA              NA                      NA           NA
+2               NA              NA                      NA           NA
+3               NA              NA                      NA           NA
+4               NA              NA                      NA           NA
+5               NA              NA                      NA           NA
+6               NA              NA                      NA           NA
+  Saxifraga.aizoides Salix.reticulata Salix.myrsinifolia Polygala.serpyllifolia
+1                 NA               NA                 NA                     NA
+2                 NA               NA                 NA                     NA
+3                 NA               NA                 NA                     NA
+4                 NA               NA                 NA                     NA
+5                 NA               NA                 NA                     NA
+6                 NA               NA                 NA                     NA
+  Cerastium.fontanum Luzula.sylvatica Botrychium.lunaria Huperzia.appressa
+1                 NA               NA                 NA                NA
+2                 NA               NA                 NA                NA
+3                 NA               NA                 NA                NA
+4                 NA               NA                 NA                NA
+5                 NA               NA                 NA                NA
+6                 NA               NA                 NA                NA
+  Carex.paupercula Silene.acaulis Rumex.acetosella Polygonatum.verticillatum
+1               NA             NA               NA                        NA
+2               NA             NA               NA                        NA
+3               NA             NA               NA                        NA
+4               NA             NA               NA                        NA
+5               NA             NA               NA                        NA
+6               NA             NA               NA                        NA
+  Milium.effusum Populus.tremula Rhododendron.tomentosum Calamagrostis.neglecta
+1             NA              NA                      NA                     NA
+2             NA              NA                      NA                     NA
+3             NA              NA                      NA                     NA
+4             NA              NA                      NA                     NA
+5             NA              NA                      NA                     NA
+6             NA              NA                      NA                     NA
+  Epilobium.hornemannii Stellaria.borealis Arctous.alpinus
+1                    NA                 NA              NA
+2                    NA                 NA              NA
+3                    NA                 NA              NA
+4                    NA                 NA              NA
+5                    NA                 NA              NA
+6                    NA                 NA              NA
+  Calamagrostis.lapponica Salix.phylicifolia Eriophorum.latifolium
+1                      NA                 NA                    NA
+2                      NA                 NA                    NA
+3                      NA                 NA                    NA
+4                      NA                 NA                    NA
+5                      NA                 NA                    NA
+6                      NA                 NA                    NA
+  Ranunculus.repens Dryas.octopetala Luzula.arcuata Taraxacum.officinale
+1                NA               NA             NA                   NA
+2                NA               NA             NA                   NA
+3                NA               NA             NA                   NA
+4                NA               NA             NA                   NA
+5                NA               NA             NA                   NA
+6                NA               NA             NA                   NA
+  Tulipa.gesneriana Salix.caprea Viola.epipsila Potamogeton.polygonifolius
+1                NA           NA             NA                         NA
+2                NA           NA             NA                         NA
+3                NA           NA             NA                         NA
+4                NA           NA             NA                         NA
+5                NA           NA             NA                         NA
+6                NA           NA             NA                         NA
+  Carex.demissa Stellaria.graminea Silene.dioica Carex.lachenalii
+1            NA                 NA            NA               NA
+2            NA                 NA            NA               NA
+3            NA                 NA            NA               NA
+4            NA                 NA            NA               NA
+5            NA                 NA            NA               NA
+6            NA                 NA            NA               NA
+  Ranunculus.glacialis Juncus.squarrosus Atocion.rupestre Galium.saxatile
+1                   NA                NA               NA              NA
+2                   NA                NA               NA              NA
+3                   NA                NA               NA              NA
+4                   NA                NA               NA              NA
+5                   NA                NA               NA              NA
+6                   NA                NA               NA              NA
+  Luzula.spicata Athyrium.distentifolium Pilosella.officinarum Juncus.triglumis
+1             NA                      NA                    NA               NA
+2             NA                      NA                    NA               NA
+3             NA                      NA                    NA               NA
+4             NA                      NA                    NA               NA
+5             NA                      NA                    NA               NA
+6             NA                      NA                    NA               NA
+  Luzula.sudetica Carex.rariflora Angelica.archangelica Agrostis.canina
+1              NA              NA                    NA              NA
+2              NA              NA                    NA              NA
+3              NA              NA                    NA              NA
+4              NA              NA                    NA              NA
+5              NA              NA                    NA              NA
+6              NA              NA                    NA              NA
+  Cardamine.bellidifolia Diapensia.lapponica Astragalus.frigidus
+1                     NA                  NA                  NA
+2                     NA                  NA                  NA
+3                     NA                  NA                  NA
+4                     NA                  NA                  NA
+5                     NA                  NA                  NA
+6                     NA                  NA                  NA
+  Carex.rupestris Cassiope.tetragona Mycelis.muralis Calamagrostis.arundinacea
+1              NA                 NA              NA                        NA
+2              NA                 NA              NA                        NA
+3              NA                 NA              NA                        NA
+4              NA                 NA              NA                        NA
+5              NA                 NA              NA                        NA
+6              NA                 NA              NA                        NA
+  Polypodium.vulgare Aconitum.septentrionale Epilobium.anagallidifolium
+1                 NA                      NA                         NA
+2                 NA                      NA                         NA
+3                 NA                      NA                         NA
+4                 NA                      NA                         NA
+5                 NA                      NA                         NA
+6                 NA                      NA                         NA
+  Petasites.frigidus Veronica.alpina Asplenium.viride Polystichum.lonchitis
+1                 NA              NA               NA                    NA
+2                 NA              NA               NA                    NA
+3                 NA              NA               NA                    NA
+4                 NA              NA               NA                    NA
+5                 NA              NA               NA                    NA
+6                 NA              NA               NA                    NA
+  Lotus.corniculatus Salix.polaris Lupinus.polyphyllus Arabis.alpina
+1                 NA            NA                  NA            NA
+2                 NA            NA                  NA            NA
+3                 NA            NA                  NA            NA
+4                 NA            NA                  NA            NA
+5                 NA            NA                  NA            NA
+6                 NA            NA                  NA            NA
+  Cirsium.heterophyllum Phalaris.arundinacea Epilobium.palustre
+1                    NA                   NA                 NA
+2                    NA                   NA                 NA
+3                    NA                   NA                 NA
+4                    NA                   NA                 NA
+5                    NA                   NA                 NA
+6                    NA                   NA                 NA
+  Sibbaldia.procumbens Carex.vesicaria Salix.hastata Astragalus.norvegicus
+1                   NA              NA            NA                    NA
+2                   NA              NA            NA                    NA
+3                   NA              NA            NA                    NA
+4                   NA              NA            NA                    NA
+5                   NA              NA            NA                    NA
+6                   NA              NA            NA                    NA
+  Primula.scandinavica Luzula.parviflora Carex.globularis Agrostis.sp.
+1                   NA                NA               NA           NA
+2                   NA                NA               NA           NA
+3                   NA                NA               NA           NA
+4                   NA                NA               NA           NA
+5                   NA                NA               NA           NA
+6                   NA                NA               NA           NA
+  Micranthes.nivalis Saxifraga.cernua Cardamine.nymanii Ranunculus.pygmaeus
+1                 NA               NA                NA                  NA
+2                 NA               NA                NA                  NA
+3                 NA               NA                NA                  NA
+4                 NA               NA                NA                  NA
+5                 NA               NA                NA                  NA
+6                 NA               NA                NA                  NA
+  Blysmopsis.rufa Acer.pseudoplatanus Schedonorus.pratensis Neottia.cordata
+1              NA                  NA                    NA              NA
+2              NA                  NA                    NA              NA
+3              NA                  NA                    NA              NA
+4              NA                  NA                    NA              NA
+5              NA                  NA                    NA              NA
+6              NA                  NA                    NA              NA
+  Festuca.vivipara Euphrasia.hyperborea Lathyrus.pratensis Carex.ornithopoda
+1               NA                   NA                 NA                NA
+2               NA                   NA                 NA                NA
+3               NA                   NA                 NA                NA
+4               NA                   NA                 NA                NA
+5               NA                   NA                 NA                NA
+6               NA                   NA                 NA                NA
+  Pyrola.rotundifolia Viola.mirabilis Eriophorum.scheuchzeri Holcus.lanatus
+1                  NA              NA                     NA             NA
+2                  NA              NA                     NA             NA
+3                  NA              NA                     NA             NA
+4                  NA              NA                     NA             NA
+5                  NA              NA                     NA             NA
+6                  NA              NA                     NA             NA
+  Avenula.pratense Equisetum.scirpoides Carex..stenolepis Aegopodium.podagraria
+1               NA                   NA                NA                    NA
+2               NA                   NA                NA                    NA
+3               NA                   NA                NA                    NA
+4               NA                   NA                NA                    NA
+5               NA                   NA                NA                    NA
+6               NA                   NA                NA                    NA
+  Stellaria.media Stellaria.longifolia Galeopsis.bifida Circaea.alpina
+1              NA                   NA               NA             NA
+2              NA                   NA               NA             NA
+3              NA                   NA               NA             NA
+4              NA                   NA               NA             NA
+5              NA                   NA               NA             NA
+6              NA                   NA               NA             NA
+  Succisa.pratensis Gentiana.purpurea Salix.myrsinites Cerastium.alpinum
+1                NA                NA               NA                NA
+2                NA                NA               NA                NA
+3                NA                NA               NA                NA
+4                NA                NA               NA                NA
+5                NA                NA               NA                NA
+6                NA                NA               NA                NA
+  Juncus.biglumis Deschampsia.alpina Trisetum.spicatum
+1              NA                 NA                NA
+2              NA                 NA                NA
+3              NA                 NA                NA
+4              NA                 NA                NA
+5              NA                 NA                NA
+6              NA                 NA                NA
+  Diphasiastrum.complanatum Verbascum.thapsus Carex.remota Equisetum.fluviatile
+1                        NA                NA           NA                   NA
+2                        NA                NA           NA                   NA
+3                        NA                NA           NA                   NA
+4                        NA                NA           NA                   NA
+5                        NA                NA           NA                   NA
+6                        NA                NA           NA                   NA
+  Neottia.ovata Prunella.vulgaris Hypericum.pulchrum Cucumis.sativus
+1            NA                NA                 NA              NA
+2            NA                NA                 NA              NA
+3            NA                NA                 NA              NA
+4            NA                NA                 NA              NA
+5            NA                NA                 NA              NA
+6            NA                NA                 NA              NA
+  Pedicularis.hirsuta Carex.rotundata Epilobium.lactiflorum Rhodiola.rosea
+1                  NA              NA                    NA             NA
+2                  NA              NA                    NA             NA
+3                  NA              NA                    NA             NA
+4                  NA              NA                    NA             NA
+5                  NA              NA                    NA             NA
+6                  NA              NA                    NA             NA
+  Cryptogramma.crispa Cirsium.vulgare Vicia.sepium Geum.urbanum
+1                  NA              NA           NA           NA
+2                  NA              NA           NA           NA
+3                  NA              NA           NA           NA
+4                  NA              NA           NA           NA
+5                  NA              NA           NA           NA
+6                  NA              NA           NA           NA
+  Trichophorum.alpinum Galium.palustre Luzula.wahlenbergii Poa.trivialis
+1                   NA              NA                  NA            NA
+2                   NA              NA                  NA            NA
+3                   NA              NA                  NA            NA
+4                   NA              NA                  NA            NA
+5                   NA              NA                  NA            NA
+6                   NA              NA                  NA            NA
+  Carex.flacca Antennaria.alpina Taraxacum.crocea Cirsium.palustre
+1           NA                NA               NA               NA
+2           NA                NA               NA               NA
+3           NA                NA               NA               NA
+4           NA                NA               NA               NA
+5           NA                NA               NA               NA
+6           NA                NA               NA               NA
+  Epilobium.montanum Luzula.campestris Dactylis.glomerata Allium.oleraceum
+1                 NA                NA                 NA               NA
+2                 NA                NA                 NA               NA
+3                 NA                NA                 NA               NA
+4                 NA                NA                 NA               NA
+5                 NA                NA                 NA               NA
+6                 NA                NA                 NA               NA
+  Elytrigia.repens Ribes.rubrum Galium.odoratum Hierochloë.odorata
+1               NA           NA              NA                 NA
+2               NA           NA              NA                 NA
+3               NA           NA              NA                 NA
+4               NA           NA              NA                 NA
+5               NA           NA              NA                 NA
+6               NA           NA              NA                 NA
+  Pedicularis.oederi Myosotis.decumbens Ranunculus.platanifolius
+1                 NA                 NA                       NA
+2                 NA                 NA                       NA
+3                 NA                 NA                       NA
+4                 NA                 NA                       NA
+5                 NA                 NA                       NA
+6                 NA                 NA                       NA
+  Carex.glacialis Betula.pendula Actaea.spicata Sagina.nivalis
+1              NA             NA             NA             NA
+2              NA             NA             NA             NA
+3              NA             NA             NA             NA
+4              NA             NA             NA             NA
+5              NA             NA             NA             NA
+6              NA             NA             NA             NA
+  Plantago.lanceolata Galium.uliginosum Caltha.palustris Salix.myrtilloides
+1                  NA                NA               NA                 NA
+2                  NA                NA               NA                 NA
+3                  NA                NA               NA                 NA
+4                  NA                NA               NA                 NA
+5                  NA                NA               NA                 NA
+6                  NA                NA               NA                 NA
+  Rhinanthus.minor Ranunculus.nivalis Micranthes.foliolosa Agrostis.stolonifera
+1               NA                 NA                   NA                   NA
+2               NA                 NA                   NA                   NA
+3               NA                 NA                   NA                   NA
+4               NA                 NA                   NA                   NA
+5               NA                 NA                   NA                   NA
+6               NA                 NA                   NA                   NA
+  Juncus.bulbosus Carex.binervis Poa.glauca Dryopteris.filix.mas
+1              NA             NA         NA                   NA
+2              NA             NA         NA                   NA
+3              NA             NA         NA                   NA
+4              NA             NA         NA                   NA
+5              NA             NA         NA                   NA
+6              NA             NA         NA                   NA
+  Geranium.robertianum Carex.pallescens Rosa.majalis Antennaria.dioica
+1                   NA               NA           NA                NA
+2                   NA               NA           NA                NA
+3                   NA               NA           NA                NA
+4                   NA               NA           NA                NA
+5                   NA               NA           NA                NA
+6                   NA               NA           NA                NA
+  Rumex.alpestris Vahlodea.atropurpurea Carex.atrofusca Atriplex.littoralis
+1              NA                    NA              NA                  NA
+2              NA                    NA              NA                  NA
+3              NA                    NA              NA                  NA
+4              NA                    NA              NA                  NA
+5              NA                    NA              NA                  NA
+6              NA                    NA              NA                  NA
+  Leymus.arenarius Carex.chordorrhiza Calamagrostis.epigejos
+1               NA                 NA                     NA
+2               NA                 NA                     NA
+3               NA                 NA                     NA
+4               NA                 NA                     NA
+5               NA                 NA                     NA
+6               NA                 NA                     NA
+  Taraxacum.spectabilia Phalaris.minor Ribes.spicatum Corylus.avellana
+1                    NA             NA             NA               NA
+2                    NA             NA             NA               NA
+3                    NA             NA             NA               NA
+4                    NA             NA             NA               NA
+5                    NA             NA             NA               NA
+6                    NA             NA             NA               NA
+  Carum.carvi Digitalis.purpurea Carex.leporina Rosa.mollis
+1          NA                 NA             NA          NA
+2          NA                 NA             NA          NA
+3          NA                 NA             NA          NA
+4          NA                 NA             NA          NA
+5          NA                 NA             NA          NA
+6          NA                 NA             NA          NA
+  Noccaea.caerulescens Hypericum.maculatum Prunus.padus Avenula.pubescens
+1                   NA                  NA           NA                NA
+2                   NA                  NA           NA                NA
+3                   NA                  NA           NA                NA
+4                   NA                  NA           NA                NA
+5                   NA                  NA           NA                NA
+6                   NA                  NA           NA                NA
+  Picea.sitchensis Phleum.pratense Lathyrus.sylvestris Quercus.petraea
+1               NA              NA                  NA              NA
+2               NA              NA                  NA              NA
+3               NA              NA                  NA              NA
+4               NA              NA                  NA              NA
+5               NA              NA                  NA              NA
+6               NA              NA                  NA              NA
+  Eleocharis.quinqueflora Ranunculus.sulphureus Lathyrus.linifolius
+1                      NA                    NA                  NA
+2                      NA                    NA                  NA
+3                      NA                    NA                  NA
+4                      NA                    NA                  NA
+5                      NA                    NA                  NA
+6                      NA                    NA                  NA
+  Ranunculus.auricomus Poa.flexuosa Oxytropis.campestris Salix.repens
+1                   NA           NA                   NA           NA
+2                   NA           NA                   NA           NA
+3                   NA           NA                   NA           NA
+4                   NA           NA                   NA           NA
+5                   NA           NA                   NA           NA
+6                   NA           NA                   NA           NA
+  Dryopteris.dilatata Scirpus.sylvaticus Cardamine.pratensis Ribes.aureum
+1                  NA                 NA                  NA           NA
+2                  NA                 NA                  NA           NA
+3                  NA                 NA                  NA           NA
+4                  NA                 NA                  NA           NA
+5                  NA                 NA                  NA           NA
+6                  NA                 NA                  NA           NA
+  Hylotelephium.maximum Angelica.sylvestris Pinguicula.alpina
+1                    NA                  NA                NA
+2                    NA                  NA                NA
+3                    NA                  NA                NA
+4                    NA                  NA                NA
+5                    NA                  NA                NA
+6                    NA                  NA                NA
+  Silene.wahlbergella Oxytropis.lapponica Carex.parallela Moneses.uniflora
+1                  NA                  NA              NA               NA
+2                  NA                  NA              NA               NA
+3                  NA                  NA              NA               NA
+4                  NA                  NA              NA               NA
+5                  NA                  NA              NA               NA
+6                  NA                  NA              NA               NA
+  Platanthera.bifolia Sambucus.racemosa Prunus.avium Acer.platanoides
+1                  NA                NA           NA               NA
+2                  NA                NA           NA               NA
+3                  NA                NA           NA               NA
+4                  NA                NA           NA               NA
+5                  NA                NA           NA               NA
+6                  NA                NA           NA               NA
+  Equisetum.hyemale Cirsium.arvense Arrhenatherum.elatius Urtica.urens
+1                NA              NA                    NA           NA
+2                NA              NA                    NA           NA
+3                NA              NA                    NA           NA
+4                NA              NA                    NA           NA
+5                NA              NA                    NA           NA
+6                NA              NA                    NA           NA
+  Scutellaria.galericulata Carex.adelostoma Cardamine.flexuosa Hepatica.nobilis
+1                       NA               NA                 NA               NA
+2                       NA               NA                 NA               NA
+3                       NA               NA                 NA               NA
+4                       NA               NA                 NA               NA
+5                       NA               NA                 NA               NA
+6                       NA               NA                 NA               NA
+  Frangula.alnus Sonchus.oleraceus Epipactis.atrorubens Omalotheca.sylvatica
+1             NA                NA                   NA                   NA
+2             NA                NA                   NA                   NA
+3             NA                NA                   NA                   NA
+4             NA                NA                   NA                   NA
+5             NA                NA                   NA                   NA
+6             NA                NA                   NA                   NA
+  Carex.atrata Vicia.sylvatica Draba.incana Poa.alpigena Gentianella.amarella
+1           NA              NA           NA           NA                   NA
+2           NA              NA           NA           NA                   NA
+3           NA              NA           NA           NA                   NA
+4           NA              NA           NA           NA                   NA
+5           NA              NA           NA           NA                   NA
+6           NA              NA           NA           NA                   NA
+  Salix.arbuscula Carex.viridula Achillea.ptarmica Matteuccia.struthiopteris
+1              NA             NA                NA                        NA
+2              NA             NA                NA                        NA
+3              NA             NA                NA                        NA
+4              NA             NA                NA                        NA
+5              NA             NA                NA                        NA
+6              NA             NA                NA                        NA
+  Cystopteris.fragilis Galeopsis.tetrahit Viola.tricolor Carex.buxbaumii
+1                   NA                 NA             NA              NA
+2                   NA                 NA             NA              NA
+3                   NA                 NA             NA              NA
+4                   NA                 NA             NA              NA
+5                   NA                 NA             NA              NA
+6                   NA                 NA             NA              NA
+  Hypericum.perforatum Glechoma.hederacea Impatiens.parviflora Huperzia.arctica
+1                   NA                 NA                   NA               NA
+2                   NA                 NA                   NA               NA
+3                   NA                 NA                   NA               NA
+4                   NA                 NA                   NA               NA
+5                   NA                 NA                   NA               NA
+6                   NA                 NA                   NA               NA
+  Agrostis.clavata Luzula.pallescens Myosotis.sylvatica Carex.capitata
+1               NA                NA                 NA             NA
+2               NA                NA                 NA             NA
+3               NA                NA                 NA             NA
+4               NA                NA                 NA             NA
+5               NA                NA                 NA             NA
+6               NA                NA                 NA             NA
+  Luzula.congesta Juncus.conglomeratus Sambucus.nigra Trifolium.repens
+1              NA                   NA             NA               NA
+2              NA                   NA             NA               NA
+3              NA                   NA             NA               NA
+4              NA                   NA             NA               NA
+5              NA                   NA             NA               NA
+6              NA                   NA             NA               NA
+  Pinguicula.villosa Fumaria.officinalis Pseudorchis.straminea
+1                 NA                  NA                    NA
+2                 NA                  NA                    NA
+3                 NA                  NA                    NA
+4                 NA                  NA                    NA
+5                 NA                  NA                    NA
+6                 NA                  NA                    NA
+  Myosotis.arvensis Sagina.caespitosa Gymnocarpium.continentale
+1                NA                NA                        NA
+2                NA                NA                        NA
+3                NA                NA                        NA
+4                NA                NA                        NA
+5                NA                NA                        NA
+6                NA                NA                        NA
+  Coeloglossum.viride Pinus.contorta Veronica.serpyllifolia Carex.lepidocarpa
+1                  NA             NA                     NA                NA
+2                  NA             NA                     NA                NA
+3                  NA             NA                     NA                NA
+4                  NA             NA                     NA                NA
+5                  NA             NA                     NA                NA
+6                  NA             NA                     NA                NA
+  Carex.elata Ajuga.pyramidalis Goodyera.repens Arctagrostis.latifolia
+1          NA                NA              NA                     NA
+2          NA                NA              NA                     NA
+3          NA                NA              NA                     NA
+4          NA                NA              NA                     NA
+5          NA                NA              NA                     NA
+6          NA                NA              NA                     NA
+  Polygala.vulgaris Pimpinella.saxifraga Sagittaria.sagittifolia Carex.livida
+1                NA                   NA                      NA           NA
+2                NA                   NA                      NA           NA
+3                NA                   NA                      NA           NA
+4                NA                   NA                      NA           NA
+5                NA                   NA                      NA           NA
+6                NA                   NA                      NA           NA
+  Kobresia.myosuroides Rhynchospora.alba Danthonia.decumbens
+1                   NA                NA                  NA
+2                   NA                NA                  NA
+3                   NA                NA                  NA
+4                   NA                NA                  NA
+5                   NA                NA                  NA
+6                   NA                NA                  NA
+  Dactylorhiza.majalis Veronica.beccabunga Viburnum.opulus Alnus.glutinosa
+1                   NA                  NA              NA              NA
+2                   NA                  NA              NA              NA
+3                   NA                  NA              NA              NA
+4                   NA                  NA              NA              NA
+5                   NA                  NA              NA              NA
+6                   NA                  NA              NA              NA
+  Carex.ericetorum Carex.acuta Euphrasia.salisburgensis Cochlearia.officinalis
+1               NA          NA                       NA                     NA
+2               NA          NA                       NA                     NA
+3               NA          NA                       NA                     NA
+4               NA          NA                       NA                     NA
+5               NA          NA                       NA                     NA
+6               NA          NA                       NA                     NA
+  Galium.spurium Phragmites.australis Euphrasia.stricta Circaea.lutetiana
+1             NA                   NA                NA                NA
+2             NA                   NA                NA                NA
+3             NA                   NA                NA                NA
+4             NA                   NA                NA                NA
+5             NA                   NA                NA                NA
+6             NA                   NA                NA                NA
+  Drymochloa.sylvatica Polygonatum.multiflorum Chrysosplenium.alternifolium
+1                   NA                      NA                           NA
+2                   NA                      NA                           NA
+3                   NA                      NA                           NA
+4                   NA                      NA                           NA
+5                   NA                      NA                           NA
+6                   NA                      NA                           NA
+  Lycopus.europaeus Trifolium.pratense Trifolium.medium Pedicularis.sylvatica
+1                NA                 NA               NA                    NA
+2                NA                 NA               NA                    NA
+3                NA                 NA               NA                    NA
+4                NA                 NA               NA                    NA
+5                NA                 NA               NA                    NA
+6                NA                 NA               NA                    NA
+  Pedicularis.sceptrum.carolinum Carex..saamica Holcus.mollis Festuca.prolifera
+1                             NA             NA            NA                NA
+2                             NA             NA            NA                NA
+3                             NA             NA            NA                NA
+4                             NA             NA            NA                NA
+5                             NA             NA            NA                NA
+6                             NA             NA            NA                NA
+  Elymus.mutabilis Corallorhiza.trifida Trifolium.pallidum Phippsia.algida
+1               NA                   NA                 NA              NA
+2               NA                   NA                 NA              NA
+3               NA                   NA                 NA              NA
+4               NA                   NA                 NA              NA
+5               NA                   NA                 NA              NA
+6               NA                   NA                 NA              NA
+  Agrostis.gigantea Impatiens.noli.tangere Salix.cinerea Rubus.fruticosus
+1                NA                     NA            NA               NA
+2                NA                     NA            NA               NA
+3                NA                     NA            NA               NA
+4                NA                     NA            NA               NA
+5                NA                     NA            NA               NA
+6                NA                     NA            NA               NA
+  Lonicera.periclymenum Glyceria.fluitans Juncus.stygius Ranunculus.flammula
+1                    NA                NA             NA                  NA
+2                    NA                NA             NA                  NA
+3                    NA                NA             NA                  NA
+4                    NA                NA             NA                  NA
+5                    NA                NA             NA                  NA
+6                    NA                NA             NA                  NA
+  Triglochin.palustris Prunus.domestica Knautia.arvensis Euphrasia.micrantha
+1                   NA               NA               NA                  NA
+2                   NA               NA               NA                  NA
+3                   NA               NA               NA                  NA
+4                   NA               NA               NA                  NA
+5                   NA               NA               NA                  NA
+6                   NA               NA               NA                  NA
+  Epilobium.alsinifolium Cystopteris.montana Kobresia.simpliciuscula
+1                     NA                  NA                      NA
+2                     NA                  NA                      NA
+3                     NA                  NA                      NA
+4                     NA                  NA                      NA
+5                     NA                  NA                      NA
+6                     NA                  NA                      NA
+  Campanula.persicifolia Helianthus.decapetalus Carex.arctogena Poa.annua
+1                     NA                     NA              NA        NA
+2                     NA                     NA              NA        NA
+3                     NA                     NA              NA        NA
+4                     NA                     NA              NA        NA
+5                     NA                     NA              NA        NA
+6                     NA                     NA              NA        NA
+  Gentiana.nivalis Ilex.aquifolium Calamagrostis.canescens Tussilago.farfara
+1               NA              NA                      NA                NA
+2               NA              NA                      NA                NA
+3               NA              NA                      NA                NA
+4               NA              NA                      NA                NA
+5               NA              NA                      NA                NA
+6               NA              NA                      NA                NA
+  Galium.triflorum Pinus.unicinata Potentilla..suberecta Convallaria.majalis
+1               NA              NA                    NA                  NA
+2               NA              NA                    NA                  NA
+3               NA              NA                    NA                  NA
+4               NA              NA                    NA                  NA
+5               NA              NA                    NA                  NA
+6               NA              NA                    NA                  NA
+  Oxalis.triangularis Rubus.arcticus Secale.cereale Acinos.arvensis
+1                  NA             NA             NA              NA
+2                  NA             NA             NA              NA
+3                  NA             NA             NA              NA
+4                  NA             NA             NA              NA
+5                  NA             NA             NA              NA
+6                  NA             NA             NA              NA
+  Heracleum.sphondylium Cerastium.nigrescens Carex..vacillans Minuartia.biflora
+1                    NA                   NA               NA                NA
+2                    NA                   NA               NA                NA
+3                    NA                   NA               NA                NA
+4                    NA                   NA               NA                NA
+5                    NA                   NA               NA                NA
+6                    NA                   NA               NA                NA
+  Valeriana.officinalis Geranium.sanguineum Allium.schoenoprasum
+1                    NA                  NA                   NA
+2                    NA                  NA                   NA
+3                    NA                  NA                   NA
+4                    NA                  NA                   NA
+5                    NA                  NA                   NA
+6                    NA                  NA                   NA
+  Calamagrostis..strigosa Elymus.caninus Senecio.sylvaticus Lysimachia.vulgaris
+1                      NA             NA                 NA                  NA
+2                      NA             NA                 NA                  NA
+3                      NA             NA                 NA                  NA
+4                      NA             NA                 NA                  NA
+5                      NA             NA                 NA                  NA
+6                      NA             NA                 NA                  NA
+  Linaria.vulgaris Erigeron.borealis Sedum.acre Bromopsis.inermis
+1               NA                NA         NA                NA
+2               NA                NA         NA                NA
+3               NA                NA         NA                NA
+4               NA                NA         NA                NA
+5               NA                NA         NA                NA
+6               NA                NA         NA                NA
+  Artemisia.abrotanum Syringa.emodi Botrychium.boreale Larix.decidua
+1                  NA            NA                 NA            NA
+2                  NA            NA                 NA            NA
+3                  NA            NA                 NA            NA
+4                  NA            NA                 NA            NA
+5                  NA            NA                 NA            NA
+6                  NA            NA                 NA            NA
+  Rubus.nessensis Erigeron.humilis Carex.rufina Acer.campestre
+1              NA               NA           NA             NA
+2              NA               NA           NA             NA
+3              NA               NA           NA             NA
+4              NA               NA           NA             NA
+5              NA               NA           NA             NA
+6              NA               NA           NA             NA
+  Gentianella.campestris Sedum.rupestre Viola.odorata Poa.arctica
+1                     NA             NA            NA          NA
+2                     NA             NA            NA          NA
+3                     NA             NA            NA          NA
+4                     NA             NA            NA          NA
+5                     NA             NA            NA          NA
+6                     NA             NA            NA          NA
+  Fraxinus.excelsior Salix..stipularis Epipactis.palustris Carex.cespitosa
+1                 NA                NA                  NA              NA
+2                 NA                NA                  NA              NA
+3                 NA                NA                  NA              NA
+4                 NA                NA                  NA              NA
+5                 NA                NA                  NA              NA
+6                 NA                NA                  NA              NA
+  Carex.leersii Hierochloë.hirta Vicia.dumetorum Cardamine.amara
+1            NA               NA              NA              NA
+2            NA               NA              NA              NA
+3            NA               NA              NA              NA
+4            NA               NA              NA              NA
+5            NA               NA              NA              NA
+6            NA               NA              NA              NA
+  Utricularia.minor Moehringia.trinervia Carex.media Veronica.fruticans
+1                NA                   NA          NA                 NA
+2                NA                   NA          NA                 NA
+3                NA                   NA          NA                 NA
+4                NA                   NA          NA                 NA
+5                NA                   NA          NA                 NA
+6                NA                   NA          NA                 NA
+  Carex.pulicaris Galium.album Galium.aparine Carex.pendula Artemisia.norvegica
+1              NA           NA             NA            NA                  NA
+2              NA           NA             NA            NA                  NA
+3              NA           NA             NA            NA                  NA
+4              NA           NA             NA            NA                  NA
+5              NA           NA             NA            NA                  NA
+6              NA           NA             NA            NA                  NA
+  Carex.riparia Juncus.alpinoarticulatus Poa.angustifolia Taxus.baccata
+1            NA                       NA               NA            NA
+2            NA                       NA               NA            NA
+3            NA                       NA               NA            NA
+4            NA                       NA               NA            NA
+5            NA                       NA               NA            NA
+6            NA                       NA               NA            NA
+  Geranium.lucidum Potentilla.argentea Lapsana.communis Barbarea.vulgaris
+1               NA                  NA               NA                NA
+2               NA                  NA               NA                NA
+3               NA                  NA               NA                NA
+4               NA                  NA               NA                NA
+5               NA                  NA               NA                NA
+6               NA                  NA               NA                NA
+  Carex.macloviana Stachys.sylvatica Lonicera.xylosteum Koenigia.islandica
+1               NA                NA                 NA                 NA
+2               NA                NA                 NA                 NA
+3               NA                NA                 NA                 NA
+4               NA                NA                 NA                 NA
+5               NA                NA                 NA                 NA
+6               NA                NA                 NA                 NA
+  Montia.fontana Lysimachia.thyrsiflora Plantago.major Antennaria.villifera
+1             NA                     NA             NA                   NA
+2             NA                     NA             NA                   NA
+3             NA                     NA             NA                   NA
+4             NA                     NA             NA                   NA
+5             NA                     NA             NA                   NA
+6             NA                     NA             NA                   NA
+  Juncus.bufonius Polygonatum.odoratum Chamorchis.alpina Juncus.articulatus
+1              NA                   NA                NA                 NA
+2              NA                   NA                NA                 NA
+3              NA                   NA                NA                 NA
+4              NA                   NA                NA                 NA
+5              NA                   NA                NA                 NA
+6              NA                   NA                NA                 NA
+  Potentilla.anglica Pyrola.chlorantha Senecio.vulgaris Lolium.perenne
+1                 NA                NA               NA             NA
+2                 NA                NA               NA             NA
+3                 NA                NA               NA             NA
+4                 NA                NA               NA             NA
+5                 NA                NA               NA             NA
+6                 NA                NA               NA             NA
+  Epilobium.hirsutum Viscaria.vulgaris Galium.elongatum Rumex.longifolius
+1                 NA                NA               NA                NA
+2                 NA                NA               NA                NA
+3                 NA                NA               NA                NA
+4                 NA                NA               NA                NA
+5                 NA                NA               NA                NA
+6                 NA                NA               NA                NA
+  Schoenus.ferrugineus Silene.vulgaris Artemisia.pontica Filipendula.vulgaris
+1                   NA              NA                NA                   NA
+2                   NA              NA                NA                   NA
+3                   NA              NA                NA                   NA
+4                   NA              NA                NA                   NA
+5                   NA              NA                NA                   NA
+6                   NA              NA                NA                   NA
+  Carex.bicolor Gentiana.pneumonanthe Bidens.cernua Myosotis.ramosissima
+1            NA                    NA            NA                   NA
+2            NA                    NA            NA                   NA
+3            NA                    NA            NA                   NA
+4            NA                    NA            NA                   NA
+5            NA                    NA            NA                   NA
+6            NA                    NA            NA                   NA
+  Carex.microglochin Sorbus.sp. Comastoma.tenellum Erigeron.acris geometry
+1                 NA         NA                 NA             NA c(151550
+2                 NA         NA                 NA             NA c(189550
+3                 NA         NA                 NA             NA  c(34450
+4                 NA         NA                 NA             NA c(179790
+5                 NA         NA                 NA             NA  c(92870
+6                 NA         NA                 NA             NA c(-12450
+          X
+1  6770370)
+2  6838870)
+3  6850130)
+4  6618790)
+5  6932870)
+6  6550870)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   7076 obs. of  607 variables:
+ $ ParentGlobalID                : Factor w/ 7076 levels "{0007EF7C-B13D-4950-B8AD-9FDADBEA6311}",..: 1 2 3 4 5 6 7 8 9 10 ...
+ $ ano_flate_id                  : Factor w/ 466 levels "ANO0003","ANO0006",..: 163 449 159 315 345 10 84 325 423 298 ...
+ $ ano_punkt_id                  : Factor w/ 7004 levels "ANO0003_11","ANO0003_13",..: 2461 6723 2385 4709 5194 156 1277 4874 6312 4493 ...
+ $ lat                           : int  151550 189550 34450 179790 92870 -12450 120130 521450 4290 455290 ...
+ $ long                          : int  6770370 6838870 6850130 6618790 6932870 6550870 6717450 7585950 6605630 7367950 ...
+ $ ssb_id                        : num  2.15e+13 2.19e+13 2.03e+13 2.18e+13 2.09e+13 ...
+ $ aar                           : int  2021 2021 2021 2020 2021 2019 2019 2020 2021 2021 ...
+ $ hovedoekosystem_punkt         : Factor w/ 13 levels "annet","arktisk_tundra",..: 4 8 9 NA 9 8 4 NA 9 9 ...
+ $ hovedtype_rute                : Factor w/ 48 levels "F","ikk","L4",..: 22 24 31 31 31 24 22 31 31 31 ...
+ $ kartleggingsenhet_1m2         : Factor w/ 178 levels "F","ikke_kartlagt",..: 73 83 111 111 124 83 69 118 111 118 ...
+ $ groeftingsintensitet          : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ bruksintensitet               : int  NA 3 NA NA NA 1 NA NA NA NA ...
+ $ beitetrykk                    : int  2 2 2 1 2 1 1 1 1 2 ...
+ $ slatteintensitet              : int  NA 1 NA NA NA 1 NA NA NA NA ...
+ $ tungekjoretoy                 : int  0 NA 0 0 0 NA 0 0 0 0 ...
+ $ slitasje                      : int  0 NA NA NA NA NA 0 NA NA NA ...
+ $ vedplanter_total_dekning      : num  30 NA 75 33 40 6 60 0 60 85 ...
+ $ busker_dekning                : num  0 20 5 2 8 4 0 0.2 15 2 ...
+ $ tresjikt_dekning              : num  0 0 25 45 50 0 0 5 45 12 ...
+ $ roesslyng_dekning             : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Festuca.ovina                 : num  1 NA NA NA NA NA NA NA NA NA ...
+ $ Vaccinium.myrtillus           : num  26 2 4 0.1 25 0.1 7 NA 45 3 ...
+ $ Diphasiastrum.alpinum         : num  4 NA NA NA NA NA 0.1 NA NA NA ...
+ $ Hieracium.sp.                 : num  3 NA NA 0.1 NA NA NA NA NA 1.5 ...
+ $ Juncus.trifidus               : num  5 NA NA NA NA NA 3 NA NA NA ...
+ $ Avenella.flexuosa             : num  7 2 NA NA 2 NA 1 NA 3 4 ...
+ $ Anthoxanthum.odoratum         : num  3 NA NA NA 0.1 NA NA NA NA NA ...
+ $ Betula.nana                   : num  NA 20 NA NA NA NA 5 NA NA NA ...
+ $ Vaccinium.vitis.idaea         : num  NA 1 NA 1 8 1 NA NA 7 6 ...
+ $ Juniperus.communis            : num  NA 1 NA NA NA NA NA NA NA NA ...
+ $ Luzula.pilosa                 : num  NA 1 NA 0.1 2 NA NA NA NA NA ...
+ $ Vaccinium.uliginosum          : num  NA 2 NA NA NA NA NA NA 17 NA ...
+ $ Empetrum.nigrum               : num  NA 25 15 NA 15 NA 20 NA NA NA ...
+ $ Gymnocarpium.dryopteris       : num  NA NA 0.1 NA 10 NA NA NA NA 9 ...
+ $ Rubus.idaeus                  : num  NA NA NA 0.1 NA NA NA NA NA NA ...
+ $ Melampyrum.pratense           : num  NA NA NA 1 1 NA NA NA NA NA ...
+ $ Maianthemum.bifolium          : num  NA NA NA 3 0.1 NA NA NA NA NA ...
+ $ Lysimachia.europaea           : num  NA NA NA 1 1 NA NA 2 3 0.9 ...
+ $ Lycopodium.annotinum          : num  NA NA NA 4 NA NA NA NA NA 0.3 ...
+ $ Melica.nutans                 : num  NA NA NA 0.1 NA NA NA NA NA NA ...
+ $ Anemone.nemorosa              : num  NA NA NA 0.1 1 NA NA NA NA NA ...
+ $ Chamaepericlymenum.suecicum   : num  NA NA NA NA 5 NA NA NA NA 75 ...
+ $ Pyrola.media                  : num  NA NA NA NA 1 NA NA NA NA NA ...
+ $ Sorbus.aucuparia              : num  NA NA NA NA 2 NA NA NA NA 0.1 ...
+ $ Lycopodium.clavatum           : num  NA NA NA NA 2 NA NA NA NA NA ...
+ $ Pteridium.aquilinum           : num  NA NA NA NA 6 NA NA NA NA NA ...
+ $ Viola.riviniana               : num  NA NA NA NA 2 NA NA NA NA 0.2 ...
+ $ Linnea.borealis               : num  NA NA NA NA 5 NA NA NA NA 0.4 ...
+ $ Betula.pubescens              : num  NA NA NA NA 1 NA NA NA NA NA ...
+ $ Trichophorum.cespitosum       : num  NA NA NA NA NA 21 NA NA NA NA ...
+ $ Nardus.stricta                : num  NA NA NA NA NA 13 NA NA NA NA ...
+ $ Molinia.caerulea              : num  NA NA NA NA NA 31 NA NA NA NA ...
+ $ Carex.panicea                 : num  NA NA NA NA NA 11 NA NA NA NA ...
+ $ Potentilla.erecta             : num  NA NA NA NA NA 6 NA NA 2 NA ...
+ $ Carex.bigelowii               : num  NA NA NA NA NA NA 4 NA NA NA ...
+ $ Rumex.acetosa                 : num  NA NA NA NA NA NA NA 4 NA NA ...
+ $ Calamagrostis.phragmitoides   : num  NA NA NA NA NA NA NA 2 NA NA ...
+ $ Viola.biflora                 : num  NA NA NA NA NA NA NA 5 NA 4 ...
+ $ Stellaria.nemorum             : num  NA NA NA NA NA NA NA 23 NA NA ...
+ $ Athyrium.filix.femina         : num  NA NA NA NA NA NA NA 100 NA NA ...
+ $ Geranium.sylvaticum           : num  NA NA NA NA NA NA NA 2 NA 4 ...
+ $ Valeriana.sambucifolia        : num  NA NA NA NA NA NA NA 3 NA NA ...
+ $ Paris.quadrifolia             : num  NA NA NA NA NA NA NA 1 NA NA ...
+ $ Anthriscus.sylvestris         : num  NA NA NA NA NA NA NA 0.1 NA NA ...
+ $ Solidago.virgaurea            : num  NA NA NA NA NA NA NA NA NA 7 ...
+ $ Chamaenerion.angustifolium    : num  NA NA NA NA NA NA NA NA NA 0.5 ...
+ $ Selaginella.selaginoides      : num  NA NA NA NA NA NA NA NA NA 0.3 ...
+ $ Oxalis.acetosella             : num  NA NA NA NA NA NA NA NA NA 1 ...
+ $ Thalictrum.alpinum            : num  NA NA NA NA NA NA NA NA NA 0.1 ...
+ $ Picea.abies                   : num  NA NA NA NA NA NA NA NA NA 48 ...
+ $ Campanula.rotundifolia        : num  NA NA NA NA NA NA NA NA NA 0.1 ...
+ $ Cicerbita.alpina              : num  NA NA NA NA NA NA NA NA NA 7 ...
+ $ Rubus.saxatilis               : num  NA NA NA NA NA NA NA NA NA 0.1 ...
+ $ Melampyrum.sylvaticum         : num  NA NA NA NA NA NA NA NA NA 2 ...
+ $ Eriophorum.angustifolium      : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Eriophorum.vaginatum          : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Bartsia.alpina                : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Crepis.paludosa               : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Andromeda.polifolia           : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Carex.flava                   : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Dactylorhiza.maculata         : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Narthecium.ossifragum         : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Pinguicula.vulgaris           : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Abies.alba                    : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ Deschampsia.cespitosa         : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Veronica.officinalis          : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Carex.vaginata                : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Picea..lutzii                 : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Carex.hostiana                : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ Rubus.chamaemorus             : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Calluna.vulgaris              : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Blechnum.spicant              : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Veronica.chamaedrys           : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Agrostis.capillaris           : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Carex.pilulifera              : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Luzula.multiflora             : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Oreopteris.limbosperma        : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Phegopteris.connectilis       : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Poa.pratensis                 : num  NA NA NA NA NA NA NA NA NA NA ...
+  [list output truncated]</code></pre>
+</div>
+</div>
+<p>Right now, the dataset is very large, and for the proof of concept, we can subset five ANO-flater (sites) that are in mountains. Here we just select the five first in the dataset: ANO0420, ANO0184, ANO0101, ANO0879, and ANO1455</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"ANO0420"</span>, <span class="st">"ANO0184"</span>, <span class="st">"ANO0289"</span>, <span class="st">"ANO0879"</span>, <span class="st">"ANO1455"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> ANO.dat <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ano_flate_id <span class="sc">%in%</span> list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>More than one rute (plot) per flate (site) can have the same nature/habitat type. It is probably good to save this “resolution”. Optionally, we can take the mean for each nature/habitat type within each flate (site). We then select one flate (site) to visualize a network.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 157 × 24
+   ParentGlobalID                   site_id patch_id    lat   long  ssb_id   aar
+   &lt;fct&gt;                            &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;  &lt;int&gt;   &lt;dbl&gt; &lt;int&gt;
+ 1 {0025D5FB-F880-410A-B2C9-EC553C… ANO0184 ANO0184… 120130 6.72e6 2.12e13  2019
+ 2 {0025D5FB-F880-410A-B2C9-EC553C… ANO0184 ANO0184… 120130 6.72e6 2.12e13  2019
+ 3 {0025D5FB-F880-410A-B2C9-EC553C… ANO0184 ANO0184… 120130 6.72e6 2.12e13  2019
+ 4 {0025D5FB-F880-410A-B2C9-EC553C… ANO0184 ANO0184… 120130 6.72e6 2.12e13  2019
+ 5 {0025D5FB-F880-410A-B2C9-EC553C… ANO0184 ANO0184… 120130 6.72e6 2.12e13  2019
+ 6 {0025D5FB-F880-410A-B2C9-EC553C… ANO0184 ANO0184… 120130 6.72e6 2.12e13  2019
+ 7 {0025D5FB-F880-410A-B2C9-EC553C… ANO0184 ANO0184… 120130 6.72e6 2.12e13  2019
+ 8 {033F363A-4A8F-412C-978D-341C34… ANO0184 ANO0184… 120370 6.72e6 2.12e13  2019
+ 9 {033F363A-4A8F-412C-978D-341C34… ANO0184 ANO0184… 120370 6.72e6 2.12e13  2019
+10 {033F363A-4A8F-412C-978D-341C34… ANO0184 ANO0184… 120370 6.72e6 2.12e13  2019
+# ℹ 147 more rows
+# ℹ 17 more variables: hovedoekosystem_punkt &lt;fct&gt;, hovedtype_rute &lt;fct&gt;,
+#   habitat_type &lt;fct&gt;, groeftingsintensitet &lt;int&gt;, bruksintensitet &lt;int&gt;,
+#   beitetrykk &lt;int&gt;, slatteintensitet &lt;int&gt;, tungekjoretoy &lt;int&gt;,
+#   slitasje &lt;int&gt;, vedplanter_total_dekning &lt;dbl&gt;, busker_dekning &lt;dbl&gt;,
+#   tresjikt_dekning &lt;dbl&gt;, roesslyng_dekning &lt;dbl&gt;, geometry &lt;fct&gt;, X &lt;fct&gt;,
+#   Species &lt;chr&gt;, species_cover &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="network-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="network-visualization">Network visualization</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We can use package _bipartite_ to plot it in two different ways:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#prepare legend</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>legend <span class="ot">&lt;-</span> <span class="fu">unique</span>(patch[,<span class="fu">c</span>(<span class="st">"habitat_type"</span>, <span class="st">"Color"</span>)])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">xpd =</span> T) <span class="co">#allow plotting outside the plot</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plotweb</span>(ntwANO, <span class="at">col.low =</span> <span class="fu">as.character</span>(patch<span class="sc">$</span>Color))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">y=</span><span class="fl">0.25</span>, <span class="fu">as.character</span>(legend<span class="sc">$</span>habitat_type), <span class="at">pch=</span><span class="dv">21</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"#777777"</span>, <span class="at">pt.bg=</span><span class="fu">as.character</span>(legend<span class="sc">$</span>Color), </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">pt.cex=</span><span class="dv">1</span>, <span class="at">cex=</span>.<span class="dv">6</span>, <span class="at">bty=</span><span class="st">"n"</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ANO-networks_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visweb</span>(ntwANO, <span class="at">prednames =</span> T, <span class="at">preynames =</span> T, <span class="at">labsize =</span> <span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ANO-networks_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#See also: https://briatte.github.io/ggnet/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#or with pretier tools:</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:lubridate':
+
+    %--%, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    as_data_frame, groups, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:purrr':
+
+    compose, simplify</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:tidyr':
+
+    crossing</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:tibble':
+
+    as_data_frame</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:bipartite':
+
+    strength</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:sna':
+
+    betweenness, bonpow, closeness, components, degree, dyad.census,
+    evcent, hierarchy, is.connected, neighborhood, triad.census</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:network':
+
+    %c%, %s%, add.edges, add.vertices, delete.edges, delete.vertices,
+    get.edge.attribute, get.edges, get.vertex.attribute, is.bipartite,
+    is.directed, list.edge.attributes, list.vertex.attributes,
+    set.edge.attribute, set.vertex.attribute</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:vegan':
+
+    diversity</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:permute':
+
+    permute</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:base':
+
+    union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#prepare the data for igraph</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>links <span class="ot">&lt;-</span> site1[,<span class="fu">c</span>(<span class="st">"Species"</span>, <span class="st">"patch_id"</span>, <span class="st">"species_cover"</span>)]</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(links)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"weight"</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>node1 <span class="ot">&lt;-</span>  <span class="fu">unique</span>(site1[,<span class="fu">c</span>(<span class="st">"patch_id"</span>, <span class="st">"habitat_type"</span>)])</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(node1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"node"</span>, <span class="st">"attribute"</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>node1<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="st">"habitat"</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>site1 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(site1)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>node2 <span class="ot">&lt;-</span>  <span class="fu">data.frame</span>(<span class="at">node =</span> <span class="fu">unique</span>(site1[,<span class="fu">c</span>(<span class="st">"Species"</span>)]), </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">attribute =</span> <span class="cn">NA</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">type =</span> <span class="st">"species"</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">rbind</span>(node1, node2)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">#create igraph object</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(<span class="at">d=</span>links,</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                             <span class="at">vertices=</span>nodes, <span class="at">directed=</span>F) </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate colors based habitat: </span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>clrs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">nod =</span> <span class="fu">V</span>(net)<span class="sc">$</span>attribute,</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>                   <span class="at">cols =</span> <span class="fu">c</span>(patch<span class="sc">$</span>Color, <span class="fu">rep</span>(<span class="st">"blue"</span>,<span class="dv">44</span> )))</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(net)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">as.character</span>(clrs<span class="sc">$</span>cols)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute node degrees (#links) and use that to set node size:</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>deg <span class="ot">&lt;-</span> <span class="fu">degree</span>(net, <span class="at">mode=</span><span class="st">"all"</span>)</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(net)<span class="sc">$</span>size <span class="ot">&lt;-</span> deg<span class="sc">*</span><span class="dv">3</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting them to NA will render no labels:</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co">#V(net)$label &lt;- as.character(nodes$id) #RR: this throws an error</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Set edge width based on weight:</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(net)<span class="sc">$</span>width <span class="ot">&lt;-</span> <span class="fu">E</span>(net)<span class="sc">$</span>weight<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#change arrow size and edge color:</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(net)<span class="sc">$</span>arrow.size <span class="ot">&lt;-</span> .<span class="dv">2</span> <span class="co">#but note no arrows in Unidirected graphs like this</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(net)<span class="sc">$</span>edge.color <span class="ot">&lt;-</span> <span class="st">"gray80"</span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co">#prepare colors</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">unique</span>(clrs)</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>cl<span class="sc">$</span>nod <span class="ot">&lt;-</span> <span class="fu">as.character</span>(cl<span class="sc">$</span>nod)</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>cl<span class="sc">$</span>nod[<span class="fu">which</span>(<span class="fu">is.na</span>(cl<span class="sc">$</span>nod))] <span class="ot">&lt;-</span> <span class="st">"Species"</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(net, <span class="at">vertex.label =</span> <span class="cn">NA</span>) <span class="co">#force vertex label NA to make visualization clearer.</span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x=</span><span class="sc">-</span><span class="fl">1.5</span>, <span class="at">y=</span><span class="sc">-</span><span class="fl">1.1</span>, cl<span class="sc">$</span>nod, <span class="at">pch=</span><span class="dv">21</span>,</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"#777777"</span>, <span class="at">pt.bg=</span><span class="fu">as.character</span>(cl<span class="sc">$</span>cols), </span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>       <span class="at">pt.cex=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">8</span>, <span class="at">bty=</span><span class="st">"n"</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#RR: doesn't work</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ANO-networks_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>There is one more package <em>visNetwork</em> that makes impressive interactive plots that may be better to visualize and explore these kind of graphs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(nodes)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"id"</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>shape <span class="ot">&lt;-</span> <span class="st">"dot"</span>  </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>shadow <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co"># Nodes will drop shadow</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>attribute <span class="ot">&lt;-</span> <span class="fu">as.character</span>(nodes<span class="sc">$</span>attribute) </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>attribute[<span class="dv">10</span><span class="sc">:</span><span class="dv">23</span>] <span class="ot">&lt;-</span>  <span class="fu">as.character</span>(nodes<span class="sc">$</span>id[<span class="dv">10</span><span class="sc">:</span><span class="dv">23</span>])<span class="co">#this is horrible coding</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>title <span class="ot">&lt;-</span> nodes<span class="sc">$</span>attribute <span class="co"># Text on click</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>label <span class="ot">&lt;-</span> nodes<span class="sc">$</span>type <span class="co"># Node label</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>size <span class="ot">&lt;-</span> deg<span class="sc">*</span><span class="dv">3</span> <span class="co"># Node size</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>borderWidth <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="co"># Node border width</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>color.background <span class="ot">&lt;-</span> clrs<span class="sc">$</span>cols</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>color.border <span class="ot">&lt;-</span> <span class="st">"black"</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>color.highlight.background <span class="ot">&lt;-</span> <span class="st">"orange"</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>nodes<span class="sc">$</span>color.highlight.border <span class="ot">&lt;-</span> <span class="st">"darkred"</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>links<span class="sc">$</span>width <span class="ot">&lt;-</span> links<span class="sc">$</span>weight <span class="co"># line width</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>links<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="st">"gray"</span>    <span class="co"># line color  </span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co">#links$arrows &lt;- "middle" # arrows: 'from', 'to', or 'middle'</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>links<span class="sc">$</span>smooth <span class="ot">&lt;-</span> <span class="cn">TRUE</span>    <span class="co"># should the edges be curved?</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>links<span class="sc">$</span>shadow <span class="ot">&lt;-</span> <span class="cn">FALSE</span>    <span class="co"># edge shadow</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(links)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"from"</span>, <span class="st">"to"</span>)</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="fu">visNetwork</span>(nodes, links) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="examine-network-structure" class="level3">
+<h3 class="anchored" data-anchor-id="examine-network-structure">Examine network structure</h3>
+<p>How is this network structured? To calculate it’s <em>nestedness</em>, we use weighted NODF, one of the more popular and robust nestedness metrics (Almeida-Neto et al.&nbsp;2008, Almeida-Neto et al.&nbsp;2010), but other options are also available.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>(obs <span class="ot">&lt;-</span> <span class="fu">networklevel</span>(<span class="at">web =</span> ntwANO, <span class="at">index =</span> <span class="st">"weighted NODF"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>weighted NODF 
+     20.22839 </code></pre>
+</div>
+</div>
+<p>To know if 20.2283929 is more nested than expected by chance for this network, we need to compare it with a null model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>nm <span class="ot">&lt;-</span> <span class="fu">nullmodel</span>(<span class="at">web =</span> ntwANO, <span class="at">N=</span><span class="dv">100</span>, <span class="at">method=</span><span class="st">"vaznull"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>null <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">sapply</span>(nm, networklevel, <span class="at">index=</span><span class="st">"weighted NODF"</span>)) </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(null), <span class="at">xlim=</span><span class="fu">c</span>(<span class="fu">min</span>(obs, <span class="fu">min</span>(null)), <span class="fu">max</span>(obs, <span class="fu">max</span>(null))), </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">main=</span><span class="st">"comparison of observed with null model Patefield"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span>obs, <span class="at">col=</span><span class="st">"red"</span>, <span class="at">lwd=</span><span class="dv">2</span>)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ANO-networks_files/figure-html/null-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>praw <span class="ot">&lt;-</span> <span class="fu">sum</span>(null<span class="sc">&gt;</span>obs) <span class="sc">/</span> <span class="fu">length</span>(null)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here, we can see that this network is less nested than expected by chance (p value 0). This suggests that these species do not use habitats in a nested way (i.e.&nbsp;species-rich habitats do not host species found in species poor habitats) and we should check for other network structural features.</p>
+<p>To gain further insights on the structure of species habitats networks, we can use another important structural metric: modularity. In this example, we will calculate a quantitative version of the metric (Dormann et al., 2014).</p>
+<p>For info on this: Detecting modules in quantitative bipartite networks: the QuaBiMo algorithm –&nbsp;arXiv Vanity (arxiv-vanity.com)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">computeModules</span>(ntwANO)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotModuleWeb</span>(res, <span class="at">displayAlabels =</span> <span class="cn">TRUE</span>, <span class="at">displayBlabels =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ANO-networks_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" style="width:160.0%"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#listModuleInformation(res)</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#printoutModuleInformation(res)</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>modules.nulls <span class="ot">&lt;-</span> <span class="fu">sapply</span>(nm, computeModules)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>like.nulls <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modules.nulls, <span class="cf">function</span>(x) x<span class="sc">@</span>likelihood)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>praw <span class="ot">&lt;-</span> <span class="fu">sum</span>(like.nulls <span class="sc">&gt;</span> res<span class="sc">@</span>likelihood) <span class="sc">/</span> <span class="fu">length</span>(like.nulls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The network is more modular than expected by chance (p-value &lt; 0). This confirms that each habitat tends to harbour a quite unique assemblage of species, with limited exchange between habitat patches. For the purpose of this worked example, we now focus on the description of these modules. We can see that patch 44, 51, 46, 24, 53, 62, 22, 66,</p>
+<p>We can see that patches 7, 8 and 9 (forest areas) form a dense module with common bumblebee species. Patches 1, 2 and 6 (grasslands and open habitats) host rarer bumblebees. The other modules are very small. It is interesting to note that the only roadside patch has its own module.</p>
+</section>
+<section id="looping-through-multiple-sites-at-once" class="level3">
+<h3 class="anchored" data-anchor-id="looping-through-multiple-sites-at-once">Looping through multiple sites at once</h3>
+<p>Now we want to loop through several sites at once. For start, we can use the five sites we used earlier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(df<span class="sc">$</span>site_id)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"toolbox.R"</span>) <span class="co">#load code developed by Song et al. and available in his paper.</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">#let's loop through all sites</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">#first we create empty objects to store the data</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>sites <span class="ot">&lt;-</span> <span class="fu">unique</span>(df<span class="sc">$</span>site_id)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>ntwks <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>nested <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>NODF <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>st_NODF <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>rob_rand <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>rob_real <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>rich <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>seminat <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(sites)){</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>  sitex <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, site_id <span class="sc">==</span> sites[i])</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">#create the network in matrix format</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>  ntwx <span class="ot">&lt;-</span> <span class="fu">cast</span>(sitex, patch_id <span class="sc">~</span> Species, <span class="at">fun.aggregate =</span> <span class="st">"sum"</span>, </span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">value =</span> <span class="st">"Abundance"</span>)</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#we can remove first column with rownames</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>  ntwx <span class="ot">&lt;-</span> ntwx[,<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">#let's visualize it with bipartite</span></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">#plotweb(ntwx)</span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>  ntwks[[i]] <span class="ot">&lt;-</span> ntwx</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">#calculate nestedness</span></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>  nested[i] <span class="ot">&lt;-</span> <span class="fu">networklevel</span>(<span class="at">web =</span> ntwx, <span class="at">index =</span> <span class="st">"weighted NODF"</span>)</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>  rob_rand[i] <span class="ot">&lt;-</span> <span class="fu">robustness</span>(<span class="fu">second.extinct</span>(<span class="at">web =</span> ntwx, <span class="at">nrep =</span> <span class="dv">50</span>, <span class="at">participant =</span> <span class="st">"lower"</span>, <span class="at">method =</span> <span class="st">"random"</span>))</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>  NODF[i] <span class="ot">&lt;-</span> <span class="fu">nestedness_NODF</span>(<span class="fu">as.matrix</span>(ntwx))</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>  st_NODF[i] <span class="ot">&lt;-</span> <span class="fu">comb_nest</span>(<span class="at">web =</span> ntwx, <span class="at">NODF =</span> NODF[i], <span class="at">max_NODF =</span> <span class="fu">max_nest</span>(ntwx))</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">#reate a realistic extinction sequence</span></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>  ext_seq <span class="ot">&lt;-</span> <span class="fu">unique</span>(sitex[,<span class="fu">c</span>(<span class="st">"Patch"</span>, <span class="st">"Habitat"</span>)])</span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">#quick and dirty way to order habitats</span></span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">levels</span>(ext_seq<span class="sc">$</span>Habitat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gCorridor"</span>, <span class="st">"bForest"</span>,</span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"cForest_grassland_boundary"</span>,</span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"fMaintained_drain"</span>, </span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"eMaintained_roadside"</span>,</span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"dNon_flowering_crop_edge"</span>,</span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"aSemi_natural_grasslands"</span>)</span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>  ext_seq<span class="sc">$</span>Patch <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">as.character</span>(ext_seq<span class="sc">$</span>Habitat))</span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a>  rob_real[i] <span class="ot">&lt;-</span> <span class="fu">robustness</span>(<span class="fu">second.extinct</span>(<span class="at">web =</span> ntwx, <span class="at">participant =</span> <span class="st">"lower"</span>, <span class="at">method =</span> <span class="st">"external"</span>, <span class="at">ext.row =</span> ext_seq<span class="sc">$</span>Patch )) <span class="co">#garsslands first, forest, etc...</span></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a>  rich[i] <span class="ot">&lt;-</span> <span class="fu">ncol</span>(ntwx)</span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a>  seminat[i] <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">subset</span>(ext_seq, Habitat <span class="sc">%in%</span></span>
+<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">c</span>(<span class="st">"aSemi_natural_grasslands"</span>,</span>
+<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"bForest"</span>))<span class="sc">$</span>Patch)</span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a>sites_measures <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(sites, nested, NODF, st_NODF, rob_rand, rob_real, rich, seminat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
