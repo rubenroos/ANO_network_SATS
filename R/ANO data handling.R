@@ -1,10 +1,7 @@
 library(sf)
-library(raster)
-library(stars)
 library(tmap)
 library(tidyverse)
-
-
+library(terra)
 
 #### download from kartkatalogen to P-drive ####
 #url <- "https://nedlasting.miljodirektoratet.no/naturovervaking/naturovervaking_eksport.gdb.zip"
@@ -20,7 +17,8 @@ ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturover
 ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
                    layer="ANO_SurveyPoint")
 
-#### upload mountain map ####
+#### upload vegetation zone map ####
+veg_zones <- rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks_N50_vegetasjonssoner_25m.tif")
 
 
 #### data handling - ANO data ####
@@ -155,13 +153,13 @@ head(ANO.sp)
 
 ## adding information on ecosystem and condition variables
 ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning")],
-                y=ANO.geo[,c("GlobalID","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
-                             "hovedoekosystem_punkt","hovedtype_rute","kartleggingsenhet_1m2",
-                             "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
-                             "tungekjoretoy","slitasje",
-                             "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning"
-                             )],#removed "SHAPE" which didn't exist in the dataset
-                by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
+                 y=ANO.geo[,c("GlobalID","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
+                              "hovedoekosystem_punkt","hovedtype_rute","kartleggingsenhet_1m2",
+                              "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
+                              "tungekjoretoy","slitasje",
+                              "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning"
+                 )],#removed "SHAPE" which didn't exist in the dataset
+                 by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
 names(ANO.dat)
 
 # remove communities which did not match an ANO point (should not happen, but does)
@@ -180,7 +178,24 @@ names(ANO.dat)
 ## adding geometry
 ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
 
+#### ANO data for mountain ecosystems ####
+terra::plot(veg_zones)
+## adding vegetation zone info to ANO data
+# change ANO-crs (vector) to veg-zone crs (raster)
+ANO.dat <- ANO.dat %>% st_transform(crs = st_crs(veg_zones))
+# extract veg-zone info for ANO points and merge with ANO.dat
+ANO_veg_zones <- terra::extract(veg_zones, vect(ANO.dat))
+ANO.dat <- cbind(ANO.dat, ANO_veg_zones[,2])
+rm(ANO_veg_zones)
+colnames(ANO.dat)[23] <- "veg_zone"
+# filter out all veg-zones that are not alpine
+ANO.fjell <- ANO.dat %>% filter(veg_zone>=2)
+
+## check that every point is present only once
+length(levels(as.factor(ANO.fjell$ano_flate_id)))
+length(levels(as.factor(ANO.fjell$ano_punkt_id)))
+summary(as.factor(ANO.fjell$ano_punkt_id))
+
 ## write data
-write.csv(ANO.dat, "Data/ANO.dat.RR.csv")
-
-
+#write.csv(ANO.dat, "Data/ANO.dat.RR.csv")
+write.csv(ANO.fjell, "Data/ANO.data.fjell.csv")
