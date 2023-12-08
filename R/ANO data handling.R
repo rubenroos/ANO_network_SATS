@@ -153,13 +153,13 @@ head(ANO.sp)
 
 ## adding information on ecosystem and condition variables
 ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning")],
-                y=ANO.geo[,c("GlobalID","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
-                             "hovedoekosystem_punkt","hovedtype_rute","kartleggingsenhet_1m2",
-                             "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
-                             "tungekjoretoy","slitasje",
-                             "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning"
-                             )],#removed "SHAPE" which didn't exist in the dataset
-                by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
+                 y=ANO.geo[,c("GlobalID","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
+                              "hovedoekosystem_punkt","hovedtype_rute","kartleggingsenhet_1m2",
+                              "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
+                              "tungekjoretoy","slitasje",
+                              "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning"
+                 )],#removed "SHAPE" which didn't exist in the dataset
+                 by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
 names(ANO.dat)
 
 # remove communities which did not match an ANO point (should not happen, but does)
@@ -191,8 +191,12 @@ colnames(ANO.dat)[23] <- "veg_zone"
 # filter out all veg-zones that are not alpine
 ANO.fjell <- ANO.dat %>% filter(veg_zone>=2)
 
+
+## check that every point is present only once
+length(levels(as.factor(ANO.fjell$ano_flate_id)))
+length(levels(as.factor(ANO.fjell$ano_punkt_id)))
+summary(as.factor(ANO.fjell$ano_punkt_id))
+
 ## write data
-write.csv(ANO.dat, "Data/ANO.dat.RR.csv")
-#write.csv(ANO.fjell, "Data/ANO.data.fjell.csv")
-
-
+#write.csv(ANO.dat, "Data/ANO.dat.RR.csv")
+write.csv(ANO.fjell, "Data/ANO.data.fjell.csv")
