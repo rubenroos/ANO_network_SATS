@@ -22,6 +22,67 @@ ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturove
 ind.Tyler <- read.table("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/ind_Tyler.txt", sep="\t", header=T)
 head(ind.Tyler)
 
+names(ind.Tyler)[1] <- 'species'
+ind.Tyler$species <- as.factor(ind.Tyler$species)
+summary(ind.Tyler$species)
+ind.Tyler <- ind.Tyler[!is.na(ind.Tyler$species),]
+ind.Tyler[,'species.orig'] <- ind.Tyler[,'species']
+ind.Tyler[,'species'] <- word(ind.Tyler[,'species'], 1,2)
+
+#ind.Tyler2 <- ind.Tyler
+#ind.Tyler <- ind.Tyler2
+ind.Tyler[duplicated(ind.Tyler[,'species']),"species"]
+ind.Tyler.dup <- ind.Tyler[duplicated(ind.Tyler[,'species']),"species"]
+ind.Tyler[ind.Tyler$species %in% ind.Tyler.dup,c("Heat_requirement","Cold_requirement","species.orig","species")]
+ind.Tyler <- ind.Tyler %>% filter( !(species.orig %in% list("Ammophila arenaria x Calamagrostis epigejos",
+                                                            "Anemone nemorosa x ranunculoides",
+                                                            "Armeria maritima ssp. elongata",
+                                                            "Asplenium trichomanes ssp. quadrivalens",
+                                                            "Calystegia sepium ssp. spectabilis",
+                                                            "Campanula glomerata 'Superba'",
+                                                            "Dactylorhiza maculata ssp. fuchsii",
+                                                            "Erigeron acris ssp. droebachensis",
+                                                            "Erigeron acris ssp. politus",
+                                                            "Erysimum cheiranthoides L. ssp. alatum",
+                                                            "Euphrasia nemorosa x stricta var. brevipila",
+                                                            "Galium mollugo x verum",
+                                                            "Geum rivale x urbanum",
+                                                            "Hylotelephium telephium (ssp. maximum)",
+                                                            "Juncus alpinoarticulatus ssp. rariflorus",
+                                                            "Lamiastrum galeobdolon ssp. argentatum",
+                                                            "Lathyrus latifolius ssp. heterophyllus",
+                                                            "Medicago sativa ssp. falcata",
+                                                            "Medicago sativa ssp. x varia",
+                                                            "Monotropa hypopitys ssp. hypophegea",
+                                                            "Ononis spinosa ssp. hircina",
+                                                            "Ononis spinosa ssp. procurrens",
+                                                            "Pilosella aurantiaca ssp. decolorans",
+                                                            "Pilosella aurantiaca ssp. dimorpha",
+                                                            "Pilosella cymosa ssp. gotlandica",
+                                                            "Pilosella cymosa ssp. praealta",
+                                                            "Pilosella officinarum ssp. peleteranum",
+                                                            "Poa x jemtlandica (Almq.) K. Richt.",
+                                                            "Poa x herjedalica Harry Sm.",
+                                                            "Ranunculus peltatus ssp. baudotii",
+                                                            "Sagittaria natans x sagittifolia",
+                                                            "Salix repens ssp. rosmarinifolia",
+                                                            "Stellaria nemorum L. ssp. montana",
+                                                            "Trichophorum cespitosum ssp. germanicum")
+) )
+ind.Tyler[duplicated(ind.Tyler[,'species']),"species"]
+ind.Tyler.dup <- ind.Tyler[duplicated(ind.Tyler[,'species']),"species"]
+ind.Tyler[ind.Tyler$species %in% ind.Tyler.dup,c("Heat_requirement","Cold_requirement","species.orig","species")]
+
+# only Hieracium and hybrids left -> get rid of these
+ind.Tyler <- ind.Tyler[!duplicated(ind.Tyler[,'species']),]
+ind.Tyler[duplicated(ind.Tyler[,'species']),"species"]
+
+ind.Tyler$species <- as.factor(ind.Tyler$species)
+summary(ind.Tyler$species)
+# no duplicates left
+
+
+
 ### Redlist
 redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021.txt", sep="\t", header=T)
 head(redlist)
@@ -160,8 +221,17 @@ ANO.sp <- ANO.sp %>%
 
 head(ANO.sp)
 
+## add information on Cold requirement and redlist status for each species
+ANO.sp <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning")],
+                y=ind.Tyler[,c("species","Cold_requirement")],
+                by.x="Species", by.y="species", all.x=T)
+
+ANO.sp <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requirement")],
+                 y=redlist[,c("Vitenskapelig.navn","Kategori.2021")],
+                 by.x="Species", by.y="Vitenskapelig.navn", all.x=T)
+
 ## adding information on ecosystem and condition variables
-ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning")],
+ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requirement","Kategori.2021")],
                  y=ANO.geo[,c("GlobalID","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
                               "hovedoekosystem_punkt","hovedtype_rute","kartleggingsenhet_1m2",
                               "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
