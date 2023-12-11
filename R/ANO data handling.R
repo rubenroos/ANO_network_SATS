@@ -3,13 +3,14 @@ library(tmap)
 library(tidyverse)
 library(terra)
 
-#### download from kartkatalogen to P-drive ####
+#### load data ####
+### download from kartkatalogen to P-drive
 #url <- "https://nedlasting.miljodirektoratet.no/naturovervaking/naturovervaking_eksport.gdb.zip"
 #download(url, dest="P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb.zip", mode="w") 
 #unzip ("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb.zip", 
 #       exdir = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb")
 
-#### upload data from P-drive ####
+### upload data from P-drive
 ## ANO
 #st_layers(dsn = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb")
 ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
@@ -17,9 +18,17 @@ ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturover
 ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
                    layer="ANO_SurveyPoint")
 
-#### upload vegetation zone map ####
-veg_zones <- rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks_N50_vegetasjonssoner_25m.tif")
+### Tyler indicator data
+ind.Tyler <- read.table("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/ind_Tyler.txt", sep="\t", header=T)
+head(ind.Tyler)
 
+### Redlist
+redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021.txt", sep="\t", header=T)
+head(redlist)
+redlist <- redlist %>% filter(Artsgruppe=="Karplanter")
+
+### upload vegetation zone map
+veg_zones <- rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks_N50_vegetasjonssoner_25m.tif")
 
 #### data handling - ANO data ####
 head(ANO.sp)
