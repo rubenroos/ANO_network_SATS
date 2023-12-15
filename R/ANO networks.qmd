@@ -337,3 +337,9 @@ sites_measures <- data.frame(sites, nested, NODF, st_NODF, rob_rand, rob_real, r
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
+
+Test Robustness function:
+
+```{r}
+ rob_rand[i] <- robustness(second.extinct(web = ntwx, nrep = 50, participant = "lower", method = "random")
+```
