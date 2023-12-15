@@ -338,8 +338,27 @@ sites_measures <- data.frame(sites, nested, NODF, st_NODF, rob_rand, rob_real, r
 
 The `echo: false` option disables the printing of code (only output is displayed).
 
-Test Robustness function:
+Calculate lots of things on the whole network
 
 ```{r}
- rob_rand[i] <- robustness(second.extinct(web = ntwx, nrep = 50, participant = "lower", method = "random")
+networklevel(ntwANO)
+```
+
+Test Robustness (area of the area underneath the extinction curve) using random method (i.e. removing habitats randomly:
+
+```{r}
+ntw.ext.rand <- second.extinct(web = ntwANO, nrep = 100, participant = "lower", method = "random", details = FALSE)
+
+ntw.ext.abun <- second.extinct(web = ntwANO, nrep = 50, participant = "lower", method = "abundance", details = FALSE)
+
+
+#Calculate robustness (surface area underneath the extinction curve)
+robustness(second.extinct(web = ntwANO, nrep = 50, participant = "lower", method = "abundance", details = TRUE))
+```
+
+Plot the extinction curve
+
+```{r}
+slope.bipartite(ntw.ext.rand, plot.it = TRUE)
+slope.bipartite(ntw.ext.abun, plot.it = TRUE)
 ```
