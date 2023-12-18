@@ -351,6 +351,7 @@ ntw.ext.rand <- second.extinct(web = ntwANO, nrep = 100, participant = "lower", 
 
 ntw.ext.abun <- second.extinct(web = ntwANO, nrep = 50, participant = "lower", method = "abundance", details = FALSE)
 
+ntw.ext.higher <- second.extinct(web = ntwANO, nrep = 100, participant = "higher", method = "abundance", details = FALSE)
 
 #Calculate robustness (surface area underneath the extinction curve)
 robustness(second.extinct(web = ntwANO, nrep = 50, participant = "lower", method = "abundance", details = TRUE))
@@ -361,4 +362,5 @@ Plot the extinction curve
 ```{r}
 slope.bipartite(ntw.ext.rand, plot.it = TRUE)
 slope.bipartite(ntw.ext.abun, plot.it = TRUE)
+slope.bipartite(ntw.ext.higher, plot.it = TRUE)
 ```
