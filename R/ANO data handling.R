@@ -18,6 +18,14 @@ ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturover
 ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
                    layer="ANO_SurveyPoint")
 
+### Redlist
+redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021.txt", sep="\t", header=T)
+head(redlist)
+redlist <- redlist %>% filter(Artsgruppe=="Karplanter")
+
+### upload vegetation zone map
+veg_zones <- rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks_N50_vegetasjonssoner_25m.tif")
+
 ### Tyler indicator data
 ind.Tyler <- read.table("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/ind_Tyler.txt", sep="\t", header=T)
 head(ind.Tyler)
@@ -81,15 +89,6 @@ ind.Tyler$species <- as.factor(ind.Tyler$species)
 summary(ind.Tyler$species)
 # no duplicates left
 
-
-
-### Redlist
-redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021.txt", sep="\t", header=T)
-head(redlist)
-redlist <- redlist %>% filter(Artsgruppe=="Karplanter")
-
-### upload vegetation zone map
-veg_zones <- rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks_N50_vegetasjonssoner_25m.tif")
 
 #### data handling - ANO data ####
 head(ANO.sp)
@@ -227,8 +226,8 @@ ANO.sp <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning")],
                 by.x="Species", by.y="species", all.x=T)
 
 ANO.sp <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requirement")],
-                 y=redlist[,c("Vitenskapelig.navn","Kategori.2021")],
-                 by.x="Species", by.y="Vitenskapelig.navn", all.x=T)
+                y=redlist[,c("Vitenskapelig.navn","Kategori.2021")],
+                by.x="Species", by.y="Vitenskapelig.navn", all.x=T)
 
 ## adding information on ecosystem and condition variables
 ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requirement","Kategori.2021")],
@@ -247,13 +246,6 @@ ANO.dat <- ANO.dat[!is.na(ANO.dat$ano_punkt_id),]
 
 test <- filter(ANO.dat, ano_punkt_id == "ANO0436_66")
 
-# making it into a wider format, remove duplicates first
-ANO.dat <- ANO.dat %>% 
-  distinct(ano_punkt_id,Species, .keep_all = TRUE) %>% #added this line to remove duplicates
-  pivot_wider(names_from=Species,values_from=art_dekning)
-
-names(ANO.dat)
-
 ## adding geometry
 ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
 
@@ -266,15 +258,22 @@ ANO.dat <- ANO.dat %>% st_transform(crs = st_crs(veg_zones))
 ANO_veg_zones <- terra::extract(veg_zones, vect(ANO.dat))
 ANO.dat <- cbind(ANO.dat, ANO_veg_zones[,2])
 rm(ANO_veg_zones)
-colnames(ANO.dat)[23] <- "veg_zone"
+colnames(ANO.dat)[25] <- "veg_zone"
+
 # filter out all veg-zones that are not alpine
 ANO.fjell <- ANO.dat %>% filter(veg_zone>=2)
 
+# making it into a wider format, remove duplicates first
+### note that Cold_requirement and Kategori.2021 are species specific! So, spreading out the species in a wide format makes these two columns useless ###
+#ANO.fjell_w <- ANO.fjell %>% 
+#  distinct(ano_punkt_id,Species, .keep_all = TRUE) %>% #added this line to remove duplicates
+#  pivot_wider(names_from="Species",values_from="art_dekning")
+#names(ANO.fjell_w)
 
 ## check that every point is present only once
-length(levels(as.factor(ANO.fjell$ano_flate_id)))
-length(levels(as.factor(ANO.fjell$ano_punkt_id)))
-summary(as.factor(ANO.fjell$ano_punkt_id))
+#length(levels(as.factor(ANO.fjell$ano_flate_id)))
+#length(levels(as.factor(ANO.fjell$ano_punkt_id)))
+#summary(as.factor(ANO.fjell$ano_punkt_id))
 
 ## write data
 #write.csv(ANO.dat, "Data/ANO.dat.RR.csv")
