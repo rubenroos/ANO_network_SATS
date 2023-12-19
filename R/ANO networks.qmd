@@ -20,19 +20,20 @@ https://www.r-bloggers.com/2013/01/r-and-foreign-characters
 
 https://community.rstudio.com/t/possible-bug-non-ascii-characters-not-displayed-properly-in-the-rstudio-release-2021-09-02/126312/2
 
-```{r}
+```{r Adjust to deal with norwegian letters}
 Sys.setlocale(locale='no_NB.utf8')
+
+#knitr::opts_chunk$set()
 ```
 
 ### Load required packages
 
-```{r}
+```{r Load required packages}
 #| echo: false
 #| message: false
 #| warning: false
 #| results: hide
-
-knitr::opts_chunk$set(echo = TRUE)
+#| 
 
 #load libraries
 library(reshape)
@@ -49,20 +50,26 @@ library(visNetwork)
 #Package bipartite needs to be manually installed and updated, can be downloaded here: https://github.com/biometry/bipartite/blob/master/bipartite_2.19.tar.gz, then use tools -> install packages, and tools -> check for package updates
 ```
 
-```{r}
+```{r Import data}
 #| echo: false
 
 #Read and review the data
-ANO.dat <- read.csv("~/Projects/ANO SATS/ANO_network_SATS/Data/ANO.dat.RR.csv", stringsAsFactors=TRUE)
-head(ANO.dat)
-str(ANO.dat)
+#ANO.dat <- read.csv("~/Projects/ANO SATS/ANO_network_SATS/Data/ANO.dat.RR.csv", stringsAsFactors=TRUE)
+#head(ANO.dat)
+#str(ANO.dat)
 #names(ANO.dat)
 #unique(ANO.dat$ano_flate_id)
+
+ANO.fjell <- read_csv("~/Projects/ANO SATS/ANO_network_SATS/Data/ANO.data.fjell.csv", show_col_types = FALSE)#silence warning about missing colnames
+
+names(ANO.fjell)
+unique(ANO.fjell$ano_flate_id)
 ```
 
 Right now, the dataset is very large, and for the proof of concept, we can subset five ANO-flater (sites) that are in mountains. Here we just select the five first in the dataset: ANO0420, ANO0184, ANO0101, ANO0879, and ANO1455
 
-```{r}
+```{r Subset data if needed}
+#|eval = false
 
 list <- c("ANO0420", "ANO0184", "ANO0289", "ANO0879", "ANO1455")
 
