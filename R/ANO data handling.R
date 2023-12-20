@@ -19,9 +19,11 @@ ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturove
                    layer="ANO_SurveyPoint")
 
 ### Redlist
-redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021.txt", sep="\t", header=T)
+redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021new.txt", sep="\t", header=T)
 head(redlist)
-redlist <- redlist %>% filter(Artsgruppe=="Karplanter")
+redlist <- redlist %>% 
+  filter(Artsgruppe=="Karplanter") %>%
+  filter(Vurderingsomraade=="Norge")
 
 ### upload vegetation zone map
 veg_zones <- rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks_N50_vegetasjonssoner_25m.tif")
