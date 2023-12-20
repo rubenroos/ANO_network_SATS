@@ -9,7 +9,7 @@ veg_zones <- terra::rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks
 buildPlan <- buildPlan %>% st_transform(crs = st_crs(veg_zones))
 
 
-val <- terra::extract(veg_zones, vect(buildPlan), fun=table, exact=TRUE, ID=TRUE, bind=TRUE)
+val <- terra::extract(veg_zones, vect(buildPlan))
 
 
 
