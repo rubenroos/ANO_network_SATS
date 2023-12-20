@@ -86,6 +86,49 @@ We can calculate some general metrics e.g., the average number of species per AN
 
 ```{r Basic metrics}
 
+# Calculates the most frequently recorded nature type
+ANO.fjell %>% 
+  count(kartleggingsenhet_1m2) %>% 
+  arrange(desc(n))#T3-C-2 (kalkfattig fjell-lynghei) is by far the most common nature type recorded
+
+# Calculates number of species per ANO point
+sr <- ANO.fjell %>% 
+  group_by(ano_punkt_id) %>% 
+  summarise(species_richness = n(), nature_type = first(kartleggingsenhet_1m2))
+sr %>% head()
+
+# Calculate average number of species per NiN nature type
+sr %>% 
+  group_by(nature_type) %>% 
+  summarise(mean_sr = mean(species_richness)) %>% 
+  arrange(desc(mean_sr))#orders to view the most species rich nature type first
+
+# Calculate hwo frequently the redlist categories occur per nature type
+ANO.fjell %>% 
+  group_by(kartleggingsenhet_1m2, Kategori.2021) %>% 
+  tally()
+  spread(value, n, fill = 0)
+
+#select unique species per nature type
+ANO.fjell %>% 
+  select(kartleggingsenhet_1m2, Species, Kategori.2021) %>% 
+  group_by(kartleggingsenhet_1m2) %>% 
+  distinct(Species, .keep_all = TRUE) %>% #creates a species list per NiN nature type and their redlist status 
+  summarise("Number of species" = n(),
+    across(Kategori.2021, list(LC = ~ sum(. == "LC"),
+                                DD = ~ sum(. == "DD"),
+                                NT  = ~ sum(. == "NT"), 
+                               VU = ~ sum(. == "VU"),
+                               EN = ~ sum(. == "EN"),
+                               CR = ~ sum(. == "CR"),
+                               RE = ~ sum(. == "RE")))) %>% 
+  rowwise() %>% 
+  mutate(RL = sum(Kategori.2021_DD, Kategori.2021_NT, Kategori.2021_VU, 
+                    Kategori.2021_EN, Kategori.2021_CR, Kategori.2021_RE), 
+         TS = sum(Kategori.2021_VU, Kategori.2021_EN, Kategori.2021_CR)) %>% #add number of readlisted species (DD-RE), and threatened species (VU, EN, CR)
+  arrange(desc(RL))#order nature types by most redlisted species: T27-C-6 (kalkfattig og intermediaer rabbepreget blokkmark) has most RL species
+
+
 ```
 
 Right now, the dataset is very large, and for the proof of concept, we can subset five ANO-flater (sites) that are in mountains. Here we just select the five first in the dataset: ANO0420, ANO0184, ANO0101, ANO0879, and ANO1455
