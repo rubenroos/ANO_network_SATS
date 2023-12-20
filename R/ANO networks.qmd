@@ -84,7 +84,7 @@ unique(ANO.fjell$ano_flate_id)#list the unique flate IDs
 
 We can calculate some general metrics e.g., the average number of species per ANO-punkt, per NiN-type, etc.
 
-```{r Basic metrics}
+```{r Basic data wrangling}
 
 # Calculates the most frequently recorded nature type
 ANO.fjell %>% 
@@ -118,10 +118,10 @@ ANO.fjell %>%
     across(Kategori.2021, list(LC = ~ sum(. == "LC"),
                                 DD = ~ sum(. == "DD"),
                                 NT  = ~ sum(. == "NT"), 
-                               VU = ~ sum(. == "VU"),
-                               EN = ~ sum(. == "EN"),
-                               CR = ~ sum(. == "CR"),
-                               RE = ~ sum(. == "RE")))) %>% 
+                                VU = ~ sum(. == "VU"),
+                                EN = ~ sum(. == "EN"),
+                                CR = ~ sum(. == "CR"),
+                                RE = ~ sum(. == "RE")))) %>% 
   rowwise() %>% 
   mutate(RL = sum(Kategori.2021_DD, Kategori.2021_NT, Kategori.2021_VU, 
                     Kategori.2021_EN, Kategori.2021_CR, Kategori.2021_RE), 
@@ -129,7 +129,35 @@ ANO.fjell %>%
   arrange(desc(RL))#order nature types by most redlisted species: T27-C-6 (kalkfattig og intermediaer rabbepreget blokkmark) has most RL species
 
 
+#Calculate and add relative cover per species per ANO plot to the data
+ANO.fjell <- ANO.fjell %>% 
+  group_by(ano_punkt_id) %>% 
+  mutate(dekning_sum = sum(art_dekning), 
+            rel_dekning = art_dekning/dekning_sum)
+    
+#Calculate community weighted value for cold requirement per ANOplot
+ANO.fjell %>% 
+  group_by(ano_punkt_id) %>% 
+  summarise(cwm_cold_requirement = weighted.mean(Cold_requirement, rel_dekning, na.rm = TRUE))
+
+#Calculate community weighted value or cold requirement per NiN nature type
+#Ruben: not sure if this is the best way to do it?
+ANO.fjell %>% 
+  group_by(kartleggingsenhet_1m2) %>% 
+  summarise(cwm_cold_requirement = weighted.mean(Cold_requirement, rel_dekning, na.rm = TRUE)) %>% 
+  arrange(desc(cwm_cold_requirement))
+
+#This gives the exact same result:
+ANO.fjell %>% 
+  group_by(ano_punkt_id, kartleggingsenhet_1m2) %>% 
+  summarise(cwm_cold_requirement = weighted.mean(Cold_requirement, rel_dekning, na.rm = TRUE)) %>% 
+  group_by(kartleggingsenhet_1m2) %>% 
+  summarise(mean_cwm_cold_requirement = mean(cwm_cold_requirement, na.rm = TRUE)) %>% arrange(desc(mean_cwm_cold_requirement))
+  
+
 ```
+
+For building network models, we want a data file that contains all the "kartleggingsenheter" across the data set, their species, and the cumulative abundance of all ndividual species.
 
 Right now, the dataset is very large, and for the proof of concept, we can subset five ANO-flater (sites) that are in mountains. Here we just select the five first in the dataset: ANO0420, ANO0184, ANO0101, ANO0879, and ANO1455
 
