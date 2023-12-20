@@ -174,6 +174,9 @@ For building network models, we want a data file that contains all the "kartlegg
 
 ```{r Create data set for network analyses}
 
+#calculate species cover per naturype per flate (sum eller average per naturtype per flate?)
+
+
 # Create a dataset that calculates the most frequent nin type per Flate
 ANO.type <- ANO.fjell %>% 
     select(ano_flate_id, ano_punkt_id, kartleggingsenhet_1m2) %>% 
