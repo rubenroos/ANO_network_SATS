@@ -1,7 +1,10 @@
 ---
 title: "ANO habitat-species networks"
-format: html
 editor: visual
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
 ---
 
 ## Building habitat-species networks using ANO data
@@ -45,7 +48,7 @@ library(tidyverse)
 library(randomcoloR)
 library(visNetwork)
 
-#Installs the github version of bipartite, https://github.com/biometry/bipartite/issues/17
+#Installs the github version (2.19) of bipartite, https://github.com/biometry/bipartite/issues/17
 #library(devtools)
 #install_github("biometry/bipartite/bipartite")
 
@@ -64,10 +67,25 @@ library(visNetwork)
 #names(ANO.dat)
 #unique(ANO.dat$ano_flate_id)
 
-ANO.fjell <- read_csv("~/Projects/ANO SATS/ANO_network_SATS/Data/ANO.data.fjell.csv", show_col_types = FALSE)#silence warning about missing colnames
+ANO.fjell <- read_csv("~/Projects/ANO SATS/ANO_network_SATS/Data/ANO.data.fjell.csv")#silence warning about missing colnames
+
+```
+
+Before we start our analyses, we can explore the data a bit. In addition, we can calculate some basic metrics.
+
+```{r Data structure}
+#| output: false
 
 names(ANO.fjell)
-unique(ANO.fjell$ano_flate_id)
+str(ANO.fjell)
+unique(ANO.fjell$ano_flate_id)#list the unique flate IDs
+
+```
+
+We can calculate some general metrics e.g., the average number of species per ANO-punkt, per NiN-type, etc.
+
+```{r Basic metrics}
+
 ```
 
 Right now, the dataset is very large, and for the proof of concept, we can subset five ANO-flater (sites) that are in mountains. Here we just select the five first in the dataset: ANO0420, ANO0184, ANO0101, ANO0879, and ANO1455
