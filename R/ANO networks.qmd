@@ -21,6 +21,9 @@ https://www.r-bloggers.com/2013/01/r-and-foreign-characters
 https://community.rstudio.com/t/possible-bug-non-ascii-characters-not-displayed-properly-in-the-rstudio-release-2021-09-02/126312/2
 
 ```{r Adjust to deal with norwegian letters}
+#|output: false
+#|message: false
+#|results: hide
 Sys.setlocale(locale='no_NB.utf8')
 
 #knitr::opts_chunk$set()
@@ -33,7 +36,6 @@ Sys.setlocale(locale='no_NB.utf8')
 #| message: false
 #| warning: false
 #| results: hide
-#| 
 
 #load libraries
 library(reshape)
@@ -52,6 +54,8 @@ library(visNetwork)
 
 ```{r Import data}
 #| echo: false
+#| warning: false
+#| output: false
 
 #Read and review the data
 #ANO.dat <- read.csv("~/Projects/ANO SATS/ANO_network_SATS/Data/ANO.dat.RR.csv", stringsAsFactors=TRUE)
@@ -69,12 +73,21 @@ unique(ANO.fjell$ano_flate_id)
 Right now, the dataset is very large, and for the proof of concept, we can subset five ANO-flater (sites) that are in mountains. Here we just select the five first in the dataset: ANO0420, ANO0184, ANO0101, ANO0879, and ANO1455
 
 ```{r Subset data if needed}
-#|eval = false
 
-list <- c("ANO0420", "ANO0184", "ANO0289", "ANO0879", "ANO1455")
+#list <- c("ANO0420", "ANO0184", "ANO0289", "ANO0879", "ANO1455")
 
-df <- ANO.dat %>% 
-  filter(ano_flate_id %in% list)
+#df <- ANO.dat %>% 
+#  filter(ano_flate_id %in% list)
+
+```
+
+We now want to convert this dataset to a long format.
+
+```{r Convert to long format}
+
+ANO.fjell.long <- pivot_longer(cols = `Festuca.ovina`:`Erigeron.acris`, 
+    names_to = "Species",
+    values_to = "species_cover")
 
 ```
 
