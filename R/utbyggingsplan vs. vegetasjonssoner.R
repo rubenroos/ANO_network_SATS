@@ -10,9 +10,10 @@ veg_zones <- terra::rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks
 buildPlan <- buildPlan %>% st_transform(crs = st_crs(veg_zones))
 
 
-val <- terra::extract(veg_zones, vect(buildPlan))
+#val <- terra::extract(veg_zones, vect(buildPlan))
 
-write.table(val, file="P:/823001_18_metodesats_analyse_23_26_roos/val.txt")
+#write.table(val, file="P:/823001_18_metodesats_analyse_23_26_roos/val.txt")
+val <- read.table("P:/823001_18_metodesats_analyse_23_26_roos/val.txt", header=T)
 
 N <- 
   val %>% 
