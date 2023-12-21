@@ -76,7 +76,8 @@ Before we start our analyses, we can explore the data a bit. In addition, we can
 ```{r Data structure}
 #| output: false
 
-names(ANO.fjell)
+unique(ANO.fjell$Species) 
+ANO.fjell %>% distinct(Species) %>% arrange(Species)
 str(ANO.fjell)
 unique(ANO.fjell$ano_flate_id)#list the unique flate IDs
 
@@ -174,8 +175,22 @@ For building network models, we want a data file that contains all the "kartlegg
 
 ```{r Create data set for network analyses}
 
-#calculate species cover per naturype per flate (sum eller average per naturtype per flate?)
+#calculate species cover per naturype per flate (using sum)
+ANO.cover <- ANO.fjell %>% 
+   select(ano_flate_id, ano_punkt_id, kartleggingsenhet_1m2, Species, art_dekning) %>% 
+  group_by(ano_flate_id, kartleggingsenhet_1m2, Species) %>% 
+  summarize(cover_sum = sum(art_dekning)) %>% 
+  rename(Habitat_type = kartleggingsenhet_1m2, 
+         Species_cover = cover_sum, 
+         Patch = ano_flate_id)#more user-friendly colnames
 
+#Convert to wide format
+ANO.cover <- ANO.cover %>% pivot_wider(names_from = Species, values_from = Species_cover, values_fill = 0)
+
+#we can remove the first column with rownames and create a matrix
+ANO_netw_ <- ANO.cover[,-1]
+ANO_netw <- as.matrix(ANO_netw_)
+colnames(ANO_netw) <- colnames(ANO_netw_)
 
 # Create a dataset that calculates the most frequent nin type per Flate
 ANO.type <- ANO.fjell %>% 
@@ -185,21 +200,17 @@ ANO.type <- ANO.fjell %>%
   group_by(ano_flate_id) %>% 
   summarise(nature_type = names(which.max(table(kartleggingsenhet_1m2))))
 
-# Create data set that sums all species cover per ANO-flate
-ANO.cover <- ANO.fjell %>% 
-   select(ano_flate_id, ano_punkt_id, kartleggingsenhet_1m2, Species, art_dekning) %>% group_by(ano_flate_id, Species) %>% 
-  summarize(cover_sum = sum(art_dekning))
+
 
 # Join these two data frames and convert to wide format
 ANO.netw <- ANO.cover %>% 
   left_join(ANO.type, by = "ano_flate_id") %>% 
+  
+  
   spread(Species, cover_sum, fill = 0) %>% 
   rename()
   
-#we can remove the first column with rownames and create a matrix
-ANO_netw_ <- ANO.netw[,-1]
-ANO_netw <- as.matrix(ANO_netw_)
-colnames(ANO.netw) <- colnames(ANO_netw_)
+
 
 #create a patch dataframe to store its properties.
 #RR: original code for color doesn't work for all sites, as the number of habitats differs between them - needs a tidier solution, see below
