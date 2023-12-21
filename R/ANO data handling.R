@@ -199,7 +199,7 @@ ANO.sp <- ANO.sp %>%
 ANO.sp <- ANO.sp %>% 
   mutate(Species=str_replace(Species,"Taraxacum croceum", "Taraxacum crocea"))
 ANO.sp <- ANO.sp %>% 
-  mutate(Species=str_replace(Species,"Arctuous alpinus", "Arctuous alpina"))
+  mutate(Species=str_replace(Species,"Arctous alpinus", "Arctous alpina"))
 
 # implement Odd's suggestions for taxonomy
 # things to remove
