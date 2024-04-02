@@ -223,21 +223,9 @@ ANO.cover.sum <- ANO.fjell %>%
          Site = ano_flate_id)#more user-friendly colnames
 
 #Convert to wide format
-
 ANO.cover <- ANO.cover %>% 
-  pivot_wider(id_cols = c(Site), names_from = Species, values_from = Species_cover, values_fill = 0)
-
-
-
-
-
-
-ANO.cover.sum <- ANO.cover.sum %>% pivot_wider(names_from = Species, values_from = Species_cover_summed, values_fill = 0)
-
-#we can remove the first column with rownames and create a matrix
-#ANO_netw_ <- ANO.cover[,-1]
-#ANO_netw <- as.matrix(ANO_netw_)
-#colnames(ANO_netw) <- colnames(ANO_netw_)
+  pivot_wider(names_from = Species, values_from = Species_cover, values_fill = 0) %>% rename(Nature_type = Habitat_type)
+ANO.cover.sum <- ANO.cover.sum %>% pivot_wider(names_from = Species, values_from = Species_cover_summed, values_fill = 0) %>% rename(Nature_type = Habitat_type)
 
 # Create a dataset that calculates the most frequent nin type per Flate
 ANO.type <- ANO.fjell %>% 
@@ -245,24 +233,69 @@ ANO.type <- ANO.fjell %>%
   group_by(ano_punkt_id, ano_flate_id) %>% 
   summarise(kartleggingsenhet_1m2 = first(kartleggingsenhet_1m2)) %>%
   group_by(ano_flate_id) %>% 
-  summarise(nature_type = names(which.max(table(kartleggingsenhet_1m2)))) %>% 
-  rename(Patch = ano_flate_id, Common_nature_type = nature_type)
+  summarise(Common_nature_type = names(which.max(table(kartleggingsenhet_1m2)))) %>% 
+  rename(Site= ano_flate_id)
 
-# Join these two data frames and convert to wide format
-ANO.netw <- ANO.cover %>% 
-  left_join(ANO.type, by = "Patch") 
+#Join these two data frames
+ANO.cover <- ANO.cover %>% 
+  left_join(ANO.type, by = "Site") 
 
 #Creates a patch dataframe to store its properties. Assigns a unique color to each nature type in the dataset. 
-patch <- unique(ANO.netw[, c("Patch", "Habitat_type")])
-patch <- patch %>% 
-  dplyr::group_by(Habitat_type) %>% 
+Nature.types <- unique(ANO.cover[, c("Plot", "Nature_type")])
+Nature.types <- Nature.types %>% 
+  dplyr::group_by(Nature_type) %>% 
   dplyr::mutate(Color = randomcoloR::randomColor()) %>%
   dplyr::ungroup()
+```
 
+#### Worked example for one site
+
+```{r Worked example for one site}
+
+#For a proof of concept, let's select one random Site and create a network for it. 
+
+df <- ANO.cover %>% 
+  filter(Site == "ANO1517")
+
+df.matrix <- as.matrix(df[4:364])
+rownames(df.matrix)<- df$Plot
+
+#We can use package _bipartite_ to plot it in two different ways:
+
+#prepare legend
+legend <- unique(Nature.types[,c("Nature_type", "Color")])
+par(xpd = T) #allow plotting outside the plot
+plotweb(df.matrix, col.low = as.character(Nature.types$Color))
+legend(x=0, y=0.25, as.character(legend$Nature_type), pch=21,
+       col="#777777", pt.bg=as.character(legend$Color), 
+       pt.cex=1, cex=.6, bty="n", ncol=2)
+visweb(df.matrix, prednames = T, preynames = T, labsize = 0.6)
+
+#See also: https://briatte.github.io/ggnet/
+
+
+
+
+```
+
+```{r Create data matrix}
 #Next step is to create a matrix file to do the network analyses
 
+ANO.matrix
 
 
+data.matrix(ANO.cover[], rownames.force = NA)
+
+
+
+#we can remove the first column with rownames and create a matrix
+#ANO_netw_ <- ANO.cover[,-1]
+#ANO_netw <- as.matrix(ANO_netw_)
+#colnames(ANO_netw) <- colnames(ANO_netw_)
+
+ANO.matrix_ <- ANO.netw[,-1]
+ANO.matrix <- as.matrix(ANO.matrix_)
+colnames(ANO.matrix) <- colnames(ANO.matrix_)
 
 #create the network in matrix format
 ntwANO <- cast(site1, patch_id ~ Species, fun.aggregate = "mean", value = "species_cover")
