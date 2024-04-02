@@ -91,6 +91,8 @@ unique(ANO.fjell$ano_flate_id)#list the unique flate IDs
 
 We can calculate some general metrics e.g., the average number of species per ANO-punkt, per NiN-type, etc.
 
+NB: there are duplicates in the data set (duplicated species registrations within the same site and entire duplicated sites). For now the duplicated sites are removed entirely, but this is not a durable solution.
+
 ```{r Basic data wrangling}
 #Calculate and add relative cover per species per ANO plot to the data
 ANO.fjell <- ANO.fjell %>% 
@@ -108,7 +110,11 @@ ANO.fjell %>%
   distinct() %>%
   group_by(ano_punkt_id, Species) %>%
   count() %>% 
-  arrange(desc(n))
+  arrange(desc(n)) #Duplicates found!! both duplicated species registration within the same ano_punkt, and duplicated flate_id
+
+#Remove the Flate/sites with duplicated data entirely. To do this, we first make a list, and then filter the data on that list. 
+
+duplicate_list <- 
 
 # Calculates the most frequently recorded nature type
 ANO.fjell %>% 
