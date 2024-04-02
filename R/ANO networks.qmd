@@ -11,7 +11,7 @@ format:
 
 Ruben E. Roos, Joachim Töpper
 
-— Summary coming —
+--- Summary coming ---
 
 ## Running Code
 
@@ -96,7 +96,7 @@ NB: there are duplicates in the data set (duplicated species registrations withi
 ```{r Basic data wrangling}
 #Calculate and add relative cover per species per ANO plot to the data
 ANO.fjell <- ANO.fjell %>% 
-    filter(!(art_dekning == 0)) %>% #We should remove the plots where only one species without cover was registered (this is obligatory in the data sampling protocol when no species are present)
+  filter(!(art_dekning == 0)) %>% #We should remove the plots where only one species without cover was registered (this is obligatory in the data sampling protocol when no species are present)
   group_by(ano_punkt_id) %>% 
   mutate(dekning_sum = sum(art_dekning, na.rm = TRUE)) %>% 
   mutate(rel_dekning = (art_dekning/dekning_sum))
@@ -114,7 +114,11 @@ ANO.fjell %>%
 
 #Remove the Flate/sites with duplicated data entirely. To do this, we first make a list, and then filter the data on that list. 
 
-duplicate_list <- 
+duplicate_list <- as.list(ANO.fjell %>%
+  distinct() %>%
+  group_by(ano_punkt_id, Species) %>%
+  count() %>% 
+  filter(n >1))
 
 # Calculates the most frequently recorded nature type
 ANO.fjell %>% 
