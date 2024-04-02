@@ -339,7 +339,7 @@ text(cz[[1]], cz[[2]], names(cz[[1]]), pos=4, cex=0.7)
 #What does this mean?
 ```
 
-Next, we can ask which habitat patches (nature types would we prioritize for its conservation value. For this we can calculate its strength (Bascopmte et al 2006).
+Next, we can ask which habitat patches (nature types would we prioritize for its conservation value. For this we can calculate its strength (Bascopmte et al 2006). We can use the "specieslevel" function to calculate a lot of other parameters for each species and nature type. Use "networklevel" to calculate parameters for the whole network
 
 ```{r}
 Cons.val <- df %>% 
@@ -353,8 +353,71 @@ bipartite::strength(t(ntw.ANO))#produces NaN for strength??
 
 bipartite::strength(ntw.ANO, type="Bascompte")
 
-#check many more parameters
-specieslevel(ntw.ANO, level = "both")
+#check many more parameters by species/Nature type
+specieslevel(ntw.ANO, level = "lower")
+
+#Check many parameters for the whole network
+networklevel(ntw.ANO)
+
+```
+
+#### Looping through multiple sites at once
+
+Now we want to loop through several sites at once. For start, we can use the five sites we used earlier.
+
+```{r}
+#| eval: false
+
+unique(df$site_id)
+
+source("toolbox.R") #load code developed by Song et al. and available in his paper.
+#let's loop through all sites
+#first we create empty objects to store the data
+sites <- unique(df$site_id)
+ntwks <- list()
+nested <- c()
+NODF <- c()
+st_NODF <- c()
+rob_rand <- c()
+rob_real <- c()
+rich <- c()
+seminat <- c()
+for(i in 1:length(sites)){
+  sitex <- subset(df, site_id == sites[i])
+  #create the network in matrix format
+  ntwx <- cast(sitex, patch_id ~ Species, fun.aggregate = "sum", 
+               value = "Abundance")
+  #we can remove first column with rownames
+  ntwx <- ntwx[,-1]
+  #let's visualize it with bipartite
+  #plotweb(ntwx)
+  ntwks[[i]] <- ntwx
+  #calculate nestedness
+  nested[i] <- networklevel(web = ntwx, index = "weighted NODF")
+  rob_rand[i] <- robustness(second.extinct(web = ntwx, nrep = 50, participant = "lower", method = "random"))
+  NODF[i] <- nestedness_NODF(as.matrix(ntwx))
+  st_NODF[i] <- comb_nest(web = ntwx, NODF = NODF[i], max_NODF = max_nest(ntwx))
+  #reate a realistic extinction sequence
+  
+  ext_seq <- unique(sitex[,c("Patch", "Habitat")])
+  #quick and dirty way to order habitats
+  levels(ext_seq$Habitat) <- c("gCorridor", "bForest",
+                               "cForest_grassland_boundary",
+                               "fMaintained_drain", 
+                               "eMaintained_roadside",
+                               "dNon_flowering_crop_edge",
+                               "aSemi_natural_grasslands")
+  ext_seq$Patch <- order(as.character(ext_seq$Habitat))
+  rob_real[i] <- robustness(second.extinct(web = ntwx, participant = "lower", method = "external", ext.row = ext_seq$Patch )) #garsslands first, forest, etc...
+  rich[i] <- ncol(ntwx)
+  seminat[i] <- length(subset(ext_seq, Habitat %in%
+                                c("aSemi_natural_grasslands",
+                                  "bForest"))$Patch)
+}
+sites_measures <- data.frame(sites, nested, NODF, st_NODF, rob_rand, rob_real, rich, seminat)
+
+
+
 
 
 ```
