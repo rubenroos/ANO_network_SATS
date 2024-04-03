@@ -346,8 +346,8 @@ Cons.val <- df %>%
   distinct(Nature_type)
 
 #we transpose the matrix to calculate it for the lower level.
-Cons.val$strength <- bipartite::strength(ntw.ANO, type="Bascompte")#doesn't work because not all nature types are included
-Cons.val
+#Cons.val$strength <- bipartite::strength(ntw.ANO, type="Bascompte")#doesn't work because not all nature types are included
+#Cons.val
 
 bipartite::strength(t(ntw.ANO))#produces NaN for strength??
 
@@ -359,6 +359,29 @@ specieslevel(ntw.ANO, level = "lower")
 #Check many parameters for the whole network
 networklevel(ntw.ANO)
 
+```
+
+#### Removing species and habitats
+
+To test the robustness of the network, we can remove species (or habitats). Robustness is defined as the area beneath the extinction curve. Extinctions can be random, based on abundance or connectedness (method = degree, very extreme case with common, well-connected species going first). A custom list e.g., based on redlist status can also be provided.
+
+```{r}
+ntw.ext.rand <- second.extinct(web = ntw.ANO, nrep = 100, participant = "higher", method = "random", details = FALSE) #random removal of species
+
+ntw.ext.abun <- second.extinct(web = ntw.ANO, nrep = 50, participant = "higher", method = "abundance", details = FALSE) #removing the least abundant species first
+
+ntw.ext.lower <- second.extinct(web = ntw.ANO, nrep = 100, participant = "lower", method = "abundance", details = FALSE) #random removal of nature types
+
+#Calculate robustness (surface area underneath the extinction curve)
+robustness(second.extinct(web = ntw.ANO, nrep = 50, participant = "lower", method = "abundance", details = TRUE))
+```
+
+Plot the extinction curve
+
+```{r}
+slope.bipartite(ntw.ext.rand, plot.it = TRUE)
+slope.bipartite(ntw.ext.abun, plot.it = TRUE)
+slope.bipartite(ntw.ext.lower, plot.it = TRUE)
 ```
 
 #### Looping through multiple sites at once
