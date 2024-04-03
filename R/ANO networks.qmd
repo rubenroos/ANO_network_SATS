@@ -255,11 +255,15 @@ First, let's visualize the network
 ```{r Worked example for one site}
 
 #For a proof of concept, let's select one random Site and create a network for it. 
-
 df <- ANO.cover %>% 
   filter(Site == "ANO1517")
 
-ntw.ANO <- as.matrix(df[4:364])
+#Remove all columns (species) that sum to zero and are not recorded at the site
+df <- df %>% 
+   select(where(~ is.numeric(.) && sum(., na.rm = TRUE) > 0))
+
+#Create a matrix
+ntw.ANO <- as.matrix(df[2:28]) #assign columns included manually
 rownames(ntw.ANO)<- df$Plot
 
 #We can use package _bipartite_ to plot the network:
@@ -342,9 +346,6 @@ text(cz[[1]], cz[[2]], names(cz[[1]]), pos=4, cex=0.7)
 Next, we can ask which habitat patches (nature types would we prioritize for its conservation value. For this we can calculate its strength (Bascopmte et al 2006). We can use the "specieslevel" function to calculate a lot of other parameters for each species and nature type. Use "networklevel" to calculate parameters for the whole network
 
 ```{r}
-Cons.val <- df %>% 
-  distinct(Nature_type)
-
 #we transpose the matrix to calculate it for the lower level.
 #Cons.val$strength <- bipartite::strength(ntw.ANO, type="Bascompte")#doesn't work because not all nature types are included
 #Cons.val
@@ -365,12 +366,19 @@ networklevel(ntw.ANO)
 
 To test the robustness of the network, we can remove species (or habitats). Robustness is defined as the area beneath the extinction curve. Extinctions can be random, based on abundance or connectedness (method = degree, very extreme case with common, well-connected species going first). A custom list e.g., based on redlist status can also be provided.
 
-```{r}
+```{r Calculating robustness}
 ntw.ext.rand <- second.extinct(web = ntw.ANO, nrep = 100, participant = "higher", method = "random", details = FALSE) #random removal of species
 
 ntw.ext.abun <- second.extinct(web = ntw.ANO, nrep = 50, participant = "higher", method = "abundance", details = FALSE) #removing the least abundant species first
 
-ntw.ext.lower <- second.extinct(web = ntw.ANO, nrep = 100, participant = "lower", method = "abundance", details = FALSE) #random removal of nature types
+ntw.ext.degr <- second.extinct(web = ntw.ANO, nrep = 50, participant = "higher", method = "degree", details = FALSE) #removing the most connected species first
+
+
+ntw.ext.habitat.rand <- second.extinct(web = ntw.ANO, nrep = 100, participant = "lower", method = "random", details = FALSE)#random removal of nature types
+
+ntw.ext.habitat.abun <- second.extinct(web = ntw.ANO, nrep = 100, participant = "lower", method = "abundance", details = FALSE) #random removal of nature types based on abundance (least first)
+
+ntw.ext.habitat.degr <- second.extinct(web = ntw.ANO, nrep = 100, participant = "lower", method = "degree", details = FALSE) #random removal of nature types based on connections (most first)
 
 #Calculate robustness (surface area underneath the extinction curve)
 robustness(second.extinct(web = ntw.ANO, nrep = 50, participant = "lower", method = "abundance", details = TRUE))
@@ -378,10 +386,44 @@ robustness(second.extinct(web = ntw.ANO, nrep = 50, participant = "lower", metho
 
 Plot the extinction curve
 
-```{r}
+```{r Plotting extinction curves}
 slope.bipartite(ntw.ext.rand, plot.it = TRUE)
 slope.bipartite(ntw.ext.abun, plot.it = TRUE)
-slope.bipartite(ntw.ext.lower, plot.it = TRUE)
+slope.bipartite(ntw.ext.degr, plot.it = TRUE)
+slope.bipartite(ntw.ext.habitat.rand, plot.it = TRUE)
+slope.bipartite(ntw.ext.habitat.abun, plot.it = TRUE)
+slope.bipartite(ntw.ext.habitat.degr, plot.it = TRUE)
+```
+
+#### One network for the entire dataset
+
+An alternative approach is to create one network for the entire dataset. In this case, we can calculate and average cover for each species for each nature type, and then create one network.
+
+```{r Dataset for one general network}
+
+#Create dataset with summed cover for each species per nature type
+ANO.cover.total <- ANO.cover %>% 
+  pivot_longer(!c(Site, Plot, Nature_type, Common_nature_type), names_to = "Species", values_to = "Species_cover") %>% #convert to long format
+  group_by(Nature_type, Species) %>% 
+  summarize(Species_cover_sum = sum(Species_cover)) %>% 
+  pivot_wider(names_from = Species, values_from = Species_cover_sum, values_fill = 0) #convert back to wide
+  
+#Convert to matrix for network model
+
+ntw.ANO.summed <- as.matrix(ANO.cover.total[2:362]) #assign columns included manually
+rownames(ntw.ANO.summed)<- ANO.cover.total$Nature_type
+
+#We can use package _bipartite_ to plot the network:
+legend <- unique(Nature.types[,c("Nature_type", "Color")])#prepare legend
+par(xpd = T) #allow plotting outside the plot
+plotweb(ntw.ANO.summed, col.low = as.character(Nature.types$Color))
+legend(x=0, y=0.25, as.character(legend$Nature_type), pch=21,
+       col="#777777", pt.bg=as.character(legend$Color), 
+       pt.cex=1, cex=.6, bty="n", ncol=2)
+visweb(ntw.ANO.summed, prednames = T, preynames = T, labsize = 0.6)
+
+
+
 ```
 
 #### Looping through multiple sites at once
