@@ -312,7 +312,6 @@ To gain further insights on the structure of species habitats networks, we can u
 For info on this: Detecting modules in quantitative bipartite networks: the QuaBiMo algorithm -- arXiv Vanity (arxiv-vanity.com)
 
 ```{r Module figure}
-#| fig.height: "160%"
 
 res <- metaComputeModules(ntw.ANO, N = 5)
 plotModuleWeb(res, displayAlabels = TRUE, displayBlabels = TRUE)
@@ -444,5 +443,45 @@ ntw.habitat.degr <- second.extinct(web = ntw.ANO.summed, nrep = 100, participant
 slope.bipartite(ntw.habitat.rand, plot.it = TRUE)
 slope.bipartite(ntw.habitat.abun, plot.it = TRUE)
 slope.bipartite(ntw.habitat.degr, plot.it = TRUE)
+
+```
+
+#### Extinctions based on RL status
+
+Lets try making extinction curves based on RL status.
+
+```{r Extinctions based on RL status}
+
+#Create dataset with species and their RL status. We also want a measure of how common they are, such as their summed cover across the whole dataset. 
+
+RL <- ANO.fjell %>% 
+  group_by(Species, Kategori.2021) %>% 
+  summarize(Total.cover = sum(art_dekning)) %>% 
+  select(Species, Kategori.2021, Total.cover) %>% 
+  distinct() %>% 
+  arrange(match(Kategori.2021, c("CR", "EN", "VU", "NT", "DD", "LC", "NA")), desc(Kategori.2021), -desc(Total.cover)) %>%
+  ungroup() %>% 
+  mutate(Rank = row_number())
+
+#Create a species vector that second.extinct understands
+#For this we want the rank for each species in the order it occurs in the network matrix
+
+Species <- ANO.cover.total %>% 
+  pivot_longer(!c(Nature_type), names_to = "Species", values_to = "Species_cover") %>% 
+  ungroup() %>% 
+  select(Species) %>% 
+  distinct(Species)
+
+RL.species <- Species %>% 
+  left_join(., RL, by = "Species")
+RL.vector <- dplyr::pull(RL.species, var = Rank)
+
+
+#Now let's do the exctintion curves (using the network for the whole dataset)
+
+#ntw.rand <- second.extinct(web = ntw.ANO.summed, nrep = 100, participant = "higher", method = "random", details = FALSE) #random removal of species
+
+#ntw.RL <- second.extinct(web = ntw.ANO.summed, nrep = 50, participant = "higher", method = "external", ext.row = RL.vector, details = FALSE) #removing the least abundant species first
+
 
 ```
