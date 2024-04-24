@@ -103,7 +103,7 @@ unique(as.factor(ANO.geo$hovedtype_rute))
 
 ## fix NiN-variables
 colnames(ANO.geo)
-colnames(ANO.geo)[42:47] <- c("groeftingsintensitet",
+colnames(ANO.geo)[41:46] <- c("groeftingsintensitet",
                               "bruksintensitet",
                               "beitetrykk",
                               "slatteintensitet",
@@ -160,6 +160,9 @@ length(levels(as.factor(ANO.geo$ano_punkt_id)))
 summary(as.factor(ANO.geo$ano_punkt_id))
 # there's a triple and many double presences, 
 # probably some wrong registrations of point numbers, but also double registrations
+# there's even entire sites (flater) with all points double
+#write.csv(summary(as.factor(ANO.geo$ano_punkt_id), maxsum=330), "Output/ANO.punktfrekvens.csv")
+
 ## workaround for being able to make ANO.geo derived data frames further down the line into spatial objects
 
 # store CRS
@@ -234,18 +237,29 @@ ANO.sp <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requi
                 by.x="Species", by.y="Vitenskapelig.navn", all.x=T)
 
 ## adding information on ecosystem and condition variables
-ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requirement","Kategori.2021")],
-                 y=ANO.geo[,c("GlobalID","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
-                              "hovedoekosystem_punkt","hovedtype_rute","kartleggingsenhet_1m2",
+# "GlobalID" in ANO.geo does for the time being not match anything in "ParentGlobalID" in ANO.sp (seems to be a bug in the original data)
+# but the url in the column "vedlegg_url" in ANO.geo contains the matching ID -> create a GlobalID2 from that to do the matching
+head(ANO.geo$vedlegg_url)
+ANO.geo$GlobalID2 <- gsub("https://vedleggapi.miljodirektoratet.no/api/overvakingvedlegg/list/", "", ANO.geo$vedlegg_url)
+unique(ANO.geo$GlobalID2)
+unique(ANO.sp$ParentGlobalID)
+ANO.sp$ParentGlobalID2 <- gsub("[{}]", "", as.factor(ANO.sp$ParentGlobalID))
+
+
+ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID2","Species","art_dekning","Cold_requirement","Kategori.2021")],
+                 y=ANO.geo[,c("GlobalID2","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
+                              "hovedtype_rute","kartleggingsenhet_1m2",
                               "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
                               "tungekjoretoy","slitasje",
                               "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning"
                  )],#removed "SHAPE" which didn't exist in the dataset
-                 by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
+                 by.x="ParentGlobalID2", by.y="GlobalID2", all.x=T)
+# y: "hovedoekosystem_punkt",
 names(ANO.dat)
 
 # remove communities which did not match an ANO point (should not happen, but does)
 dim(ANO.dat[is.na(ANO.dat$ano_punkt_id),])
+dim(ANO.dat[!is.na(ANO.dat$ano_punkt_id),])
 ANO.dat <- ANO.dat[!is.na(ANO.dat$ano_punkt_id),]
 
 test <- filter(ANO.dat, ano_punkt_id == "ANO0436_66")
