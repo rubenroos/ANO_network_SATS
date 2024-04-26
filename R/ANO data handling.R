@@ -12,11 +12,15 @@ library(terra)
 
 ### upload data from P-drive
 ## ANO
-#st_layers(dsn = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb")
-ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
+#st_layers(dsn = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb")
+ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb",
                   layer="ANO_Art")
-ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/Naturovervaking_eksport.gdb",
+ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb",
                    layer="ANO_SurveyPoint")
+
+#write.table(ANO.geo, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Data/ANO_geo.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
+#write.table(ANO.sp, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Data/ANO_sp.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
+
 
 ### Redlist
 redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021new.txt", sep="\t", header=T)
@@ -239,21 +243,21 @@ ANO.sp <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requi
 ## adding information on ecosystem and condition variables
 # "GlobalID" in ANO.geo does for the time being not match anything in "ParentGlobalID" in ANO.sp (seems to be a bug in the original data)
 # but the url in the column "vedlegg_url" in ANO.geo contains the matching ID -> create a GlobalID2 from that to do the matching
-head(ANO.geo$vedlegg_url)
-ANO.geo$GlobalID2 <- gsub("https://vedleggapi.miljodirektoratet.no/api/overvakingvedlegg/list/", "", ANO.geo$vedlegg_url)
-unique(ANO.geo$GlobalID2)
-unique(ANO.sp$ParentGlobalID)
-ANO.sp$ParentGlobalID2 <- gsub("[{}]", "", as.factor(ANO.sp$ParentGlobalID))
+#head(ANO.geo$vedlegg_url)
+#ANO.geo$GlobalID2 <- gsub("https://vedleggapi.miljodirektoratet.no/api/overvakingvedlegg/list/", "", ANO.geo$vedlegg_url)
+#unique(ANO.geo$GlobalID2)
+#unique(ANO.sp$ParentGlobalID)
+#ANO.sp$ParentGlobalID2 <- gsub("[{}]", "", as.factor(ANO.sp$ParentGlobalID))
 
 
-ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID2","Species","art_dekning","Cold_requirement","Kategori.2021")],
-                 y=ANO.geo[,c("GlobalID2","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
+ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requirement","Kategori.2021")],
+                 y=ANO.geo[,c("GlobalID","ano_flate_id","ano_punkt_id","lat","long","ssb_id","aar",
                               "hovedtype_rute","kartleggingsenhet_1m2",
                               "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
                               "tungekjoretoy","slitasje",
                               "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning"
                  )],#removed "SHAPE" which didn't exist in the dataset
-                 by.x="ParentGlobalID2", by.y="GlobalID2", all.x=T)
+                 by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
 # y: "hovedoekosystem_punkt",
 names(ANO.dat)
 
