@@ -87,6 +87,7 @@ ANO.fjell %>% distinct(Species) %>% arrange(Species)
 str(ANO.fjell)
 unique(ANO.fjell$ano_flate_id)#list the unique flate IDs
 
+
 ```
 
 We can calculate some general metrics e.g., the average number of species per ANO-punkt, per NiN-type, etc.
@@ -94,52 +95,108 @@ We can calculate some general metrics e.g., the average number of species per AN
 NB: there are duplicates in the data set (duplicated species registrations within the same site and entire duplicated sites). For now the duplicated sites are removed entirely, but this is not a durable solution.
 
 ```{r Basic data wrangling}
+
+#First, let's give some easier column names. 
+ANO.fjell <- ANO.fjell %>% dplyr::rename(Species_cover = art_dekning, 
+                     RL_status_2021 = Kategori.2021,
+                     Site = ano_flate_id, 
+                     Plot = ano_punkt_id, 
+                     Lat = lat, 
+                     Long = long, 
+                     SSB_id = ssb_id, 
+                     Year = aar, 
+                     Ecosystem_type = hovedtype_rute, 
+                     Habitat_type = kartleggingsenhet_1m2)
+
+
 #Calculate and add relative cover per species per ANO plot to the data
 ANO.fjell <- ANO.fjell %>% 
-  filter(!(art_dekning == 0)) %>% #We should remove the plots where only one species without cover was registered (it is obligatory to list at least one species in the data sampling protocol, even when no species are present)
-  group_by(ano_punkt_id) %>% 
-  mutate(dekning_sum = sum(art_dekning, na.rm = TRUE)) %>% 
-  mutate(rel_dekning = (art_dekning/dekning_sum))
+  filter(!(Species_cover == 0)) %>% #We should remove the plots where only one species without cover was registered (it is obligatory to list at least one species in the data sampling protocol, even when no species are present)
+  group_by(Plot) %>% 
+  mutate(Cover_sum = sum(Species_cover, na.rm = TRUE)) %>% 
+  mutate(Cover_rel = (Species_cover/Cover_sum))
 
 #We also have one registration of C. bigelowii without any cover, which should be removed
 ANO.fjell <- ANO.fjell %>% 
-  filter(!is.na(art_dekning))
+  filter(!is.na(Species_cover))
 
-#Check if there are any duplicates in the data (i.e. same species registered twice per plot)
+#Check if there are any duplicates of plots (i.e. same species registered twice per plot)
 ANO.fjell %>%
   distinct() %>%
-  group_by(ano_punkt_id, Species) %>%
+  group_by(Plot, Species) %>%
   count() %>% 
-  arrange(desc(n)) #This produced duplicates before, but the directorate for enviroment has solved this issue in the data. 
+  arrange(desc(n)) #This produces duplicates. In some cases, a species is registered twice for a rute, in other cases the whole rute is duplicated. This can be either due to mislabelling of the rute, or the same rute is in fact sampled twice. 
 
-#The code below is to remove any duplicates, which is no longer necessary. ¨
 #Remove the plots (punkt_id) with duplicated data entirely. To do this, we first make a list, and then filter the data on that list. 
-#duplicate_list <- as.list(ANO.fjell %>%
-#  distinct() %>%
-#  group_by(ano_punkt_id, Species) %>%
-#  count() %>% 
-#  filter(n >1))
+duplicate_list <- as.list(ANO.fjell %>%
+  distinct() %>%
+  group_by(Plot, Species) %>%
+  count() %>% 
+  filter(n >1))
+
+unique(duplicate_list$Plot) #see which plots contain one or more duplicates
 
 #Filter the data by the list
-#ANO.fjell <- ANO.fjell %>% 
-#  filter(!ano_punkt_id %in% duplicate_list[["ano_punkt_id"]])
+ANO.fjell <- ANO.fjell %>% 
+  filter(!Plot %in% duplicate_list[["Plot"]])
 
-# Calculates the most frequently recorded nature type
-ANO.fjell %>% 
-  count(kartleggingsenhet_1m2) %>% 
+# Calculates the most frequently recorded habitat type (grunntype)
+ANO.habitat.type <- ANO.fjell %>% 
+  ungroup() %>% 
+  count(Habitat_type) %>% 
   arrange(desc(n))#T3-C-2 (kalkfattig fjell-lynghei) is by far the most common nature type recorded
 
-# Calculates number of species per ANO point
-sr <- ANO.fjell %>% 
-  group_by(ano_punkt_id) %>% 
-  summarise(species_richness = n(), nature_type = first(kartleggingsenhet_1m2))
-sr %>% head()
+#Create a plot of how often each of the ecosystem types is registered
+ANO.fjell %>% 
+  ggplot(aes(x = reorder(Ecosystem_type, Ecosystem_type, function(x)-length(x)))) + 
+  geom_bar()+
+  xlab("Ecosystem type (hovedtype)")+
+  ylab("Number of ANO-ruter")
 
-# Calculate average number of species per NiN nature type
-sr %>% 
-  group_by(nature_type) %>% 
-  summarise(mean_sr = mean(species_richness, na.rm=TRUE)) %>% 
-  arrange(desc(mean_sr))#orders to view the most species rich nature type first
+#Create a plot of how often each of the Habitat types (grunntyper) is recorded
+ANO.fjell %>% 
+  ggplot(aes(x = reorder(Habitat_type, Habitat_type, function(x)-length(x)))) + 
+  geom_bar()+
+  xlab("Habitat type (grunntype)")+
+  ylab("Number of ANO-ruter")
+
+# Calculates number of species per ANO point
+ANO.sr <- ANO.fjell %>% 
+  group_by(Plot) %>% 
+  summarise(Species_richness = n(), Habitat_type = first(Habitat_type))
+ANO.sr %>% head()
+
+# Calculate average number of species per Habitat type (grunntype)
+ANO.sr.avg <- ANO.sr %>% 
+  group_by(Habitat_type) %>% 
+  summarise(Species_richness = mean(Species_richness, na.rm=TRUE)) %>% 
+  arrange(desc(Species_richness)) #orders to view the most species rich nature type first 
+
+#Correlate how often a habitat type is recorded vs its average species richness
+
+left_join(ANO.sr.avg, ANO.habitat.type, by = "Habitat_type") %>% 
+  ggplot(aes(x = n, y = Species_richness)) +
+  geom_point()
+
+#plot species richness per Ecosystem type (hovedtype)
+
+ANO.fjell %>% 
+  group_by(Ecosy_type) %>% 
+  summarise(Species_richness = mean(Species_richness)) %>% 
+  ggplot(aes(x = reorder(Habitat_type, Habitat_type, function(x)-length(x)))) + 
+  geom_bar()+
+  xlab("Habitat type (grunntype)")+
+  ylab("Number of ANO-ruter")
+
+
+
+
+
+
+
+
+
+
 
 # Calculate how frequently the redlist categories occur per nature type
 habitat.RL <- ANO.fjell %>% 
@@ -198,6 +255,14 @@ RL.cold %>%
 
 ```
 
+Now, let's make some figures to help explore the data!
+
+First, we can make a figure of how often different hovedtyper are registered.
+
+```{r Create figure for }
+
+```
+
 ### Building network models
 
 #### Preparing data for analyses
@@ -214,7 +279,7 @@ ANO.cover <- ANO.fjell %>%
          Site = ano_flate_id, 
          Plot = ano_punkt_id)#more user-friendly colnames
 
-#calculate species cover per naturype per Site (using sum)
+#calculate species cover per naturtype per Site (using sum)
 ANO.cover.sum <- ANO.fjell %>% 
    select(ano_flate_id, ano_punkt_id, kartleggingsenhet_1m2, Species, art_dekning) %>% 
   group_by(ano_flate_id, kartleggingsenhet_1m2, Species) %>% 
