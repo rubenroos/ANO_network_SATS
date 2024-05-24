@@ -96,7 +96,7 @@ NB: there are duplicates in the data set (duplicated species registrations withi
 ```{r Basic data wrangling}
 #Calculate and add relative cover per species per ANO plot to the data
 ANO.fjell <- ANO.fjell %>% 
-  filter(!(art_dekning == 0)) %>% #We should remove the plots where only one species without cover was registered (this is obligatory in the data sampling protocol when no species are present)
+  filter(!(art_dekning == 0)) %>% #We should remove the plots where only one species without cover was registered (it is obligatory to list at least one species in the data sampling protocol, even when no species are present)
   group_by(ano_punkt_id) %>% 
   mutate(dekning_sum = sum(art_dekning, na.rm = TRUE)) %>% 
   mutate(rel_dekning = (art_dekning/dekning_sum))
@@ -110,18 +110,19 @@ ANO.fjell %>%
   distinct() %>%
   group_by(ano_punkt_id, Species) %>%
   count() %>% 
-  arrange(desc(n)) #Duplicates found!! both duplicated species registration within the same ano_punkt, and duplicated flate_id
+  arrange(desc(n)) #This produced duplicates before, but the directorate for enviroment has solved this issue in the data. 
 
+#The code below is to remove any duplicates, which is no longer necessary. ¨
 #Remove the plots (punkt_id) with duplicated data entirely. To do this, we first make a list, and then filter the data on that list. 
-duplicate_list <- as.list(ANO.fjell %>%
-  distinct() %>%
-  group_by(ano_punkt_id, Species) %>%
-  count() %>% 
-  filter(n >1))
+#duplicate_list <- as.list(ANO.fjell %>%
+#  distinct() %>%
+#  group_by(ano_punkt_id, Species) %>%
+#  count() %>% 
+#  filter(n >1))
 
 #Filter the data by the list
-ANO.fjell <- ANO.fjell %>% 
-  filter(!ano_punkt_id %in% duplicate_list[["ano_punkt_id"]])
+#ANO.fjell <- ANO.fjell %>% 
+#  filter(!ano_punkt_id %in% duplicate_list[["ano_punkt_id"]])
 
 # Calculates the most frequently recorded nature type
 ANO.fjell %>% 
