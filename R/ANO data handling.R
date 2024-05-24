@@ -280,7 +280,7 @@ ANO.dat <- ANO.dat %>% st_transform(crs = st_crs(veg_zones))
 ANO_veg_zones <- terra::extract(veg_zones, vect(ANO.dat))
 ANO.dat <- cbind(ANO.dat, ANO_veg_zones[,2])
 rm(ANO_veg_zones)
-colnames(ANO.dat)[25] <- "veg_zone"
+colnames(ANO.dat)[24] <- "veg_zone"
 
 # filter out all veg-zones that are not alpine
 ANO.fjell <- ANO.dat %>% filter(veg_zone>=2)
