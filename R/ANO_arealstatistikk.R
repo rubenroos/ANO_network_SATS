@@ -29,3 +29,15 @@ ANO_punktstat <- ANO.geo %>%
   st_drop_geometry()
 
 write.table(ANO_punktstat, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Output/ANO_punktstat.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
+
+ANO_flatestat <- ANO.geo %>%
+  group_by(hovedtype_rute) %>%
+  count(ano_flate_id) %>%
+  #  pivot_wider(names_from = "region", values_from = "n") %>%
+  st_drop_geometry()
+
+ANO_flatestat <- ANO_flatestat %>%
+  group_by(hovedtype_rute) %>%
+  count()
+
+write.table(ANO_flatestat, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Output/ANO_flatestat.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
