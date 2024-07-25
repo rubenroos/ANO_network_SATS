@@ -13,14 +13,61 @@ library(terra)
 ### upload data from P-drive
 ## ANO
 #st_layers(dsn = "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb")
-ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb",
-                  layer="ANO_Art")
-ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb",
-                   layer="ANO_SurveyPoint")
+ANO.sp <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb", layer="ANO_Art")
+ANO.geo <- st_read("P:/823001_18_metodesats_analyse_23_26_roos/ANO data/naturovervaking_eksport.gdb", layer="ANO_SurveyPoint")
+## workaround for being able to make ANO.geo derived data frames further down the line into spatial objects
+# store CRS
+ANO.geo.crs <- st_crs(ANO.geo)
+# store coords from SHAPE as separate variables and drop geometry
+ANO.geo <- ANO.geo %>%
+  mutate(lat = st_coordinates(.)[,1],
+         long = st_coordinates(.)[,2]) %>%
+  st_drop_geometry()
 
 #write.table(ANO.geo, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Data/ANO_geo.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
 #write.table(ANO.sp, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Data/ANO_sp.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
 
+### upload climate data - this hashed-out code shows how the climate data are uploaded from the EcoMAP P-drive, merged into ANO.geo and the result stored as a RDS on the project github repo
+# worldclim data imported from ECoMAP's p-folder
+# the data are 10-yr climatologies from 1967-2017
+# here we use the most recent one from 2017
+
+#rastlist <- list.files(path = "P:/22202210_ecomap/explanatory variables/Climate/HighRes", pattern='.Tif$', all.files= T, full.names= T)
+#climate <- list()
+#climate[['bio1']]  <- terra::rast(rastlist[1])[['C17']]
+#climate[['bio10']]  <- terra::rast(rastlist[2])[['C17']]
+#climate[['bio11']]  <- terra::rast(rastlist[3])[['C17']]
+#climate[['bio12']]  <- terra::rast(rastlist[4])[['C17']]
+#climate[['bio16']]  <- terra::rast(rastlist[5])[['C17']]
+#climate[['bio17']]  <- terra::rast(rastlist[6])[['C17']]
+#climate[['bio5']]  <- terra::rast(rastlist[7])[['C17']]
+#climate[['bio6']]  <- terra::rast(rastlist[8])[['C17']]
+
+# worldclim variable codes
+#BIO1 = Annual Mean Temperature
+#BIO10 = Mean Temperature of Warmest Quarter
+#BIO11 = Mean Temperature of Coldest Quarter
+#BIO12 = Annual Precipitation
+#BIO16 = Precipitation of Wettest Quarter
+#BIO17 = Precipitation of Driest Quarter
+#BIO5 = Max Temperature of Warmest Month
+#BIO6 = Min Temperature of Coldest Month
+
+## adding climate to ANO data
+# extract climate info for ANO points and merge with ANO.geo
+#for (i in 1:length(climate) ) {
+  # change ANO-crs (vector) to climate crs (raster)
+#  ANO.geo.clim <- ANO.geo %>% st_transform(crs = st_crs(climate[[i]]))
+  # extraxt climate for ANO-points
+#  ANO_biox <- terra::extract(climate[[i]], vect(ANO.geo.clim))
+  # add climate to ANO.geo data
+#  ANO.geo <- cbind(ANO.geo, ANO_biox[,2])
+#}
+#colnames(ANO.geo)[68:75] <- c('bio1','bio10','bio11','bio12','bio16','bio17','bio5','bio6')
+#saveRDS(ANO.geo, "P:/823001_18_metodesats_analyse_23_26_roos/ANO data/ANO.geo.clim.RDS")
+
+## overwrite ANO.geo with stored RDS-file (ANO data including climate data)
+ANO.geo <- readRDS("input/ANO.geo.clim.RDS") "NB: this is a df, not a spatial object. Add ANO.geo.crs to make spatial (happens towards end of file)"
 
 ### Redlist
 redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021new.txt", sep="\t", header=T)
@@ -167,16 +214,6 @@ summary(as.factor(ANO.geo$ano_punkt_id))
 # there's even entire sites (flater) with all points double
 #write.csv(summary(as.factor(ANO.geo$ano_punkt_id), maxsum=330), "Output/ANO.punktfrekvens.csv")
 
-## workaround for being able to make ANO.geo derived data frames further down the line into spatial objects
-
-# store CRS
-ANO.geo.crs <- st_crs(ANO.geo)
-# store coords from SHAPE as separate variables and drop geometry
-ANO.geo <- ANO.geo %>%
-  mutate(lat = st_coordinates(.)[,1],
-         long = st_coordinates(.)[,2]) %>%
-  st_drop_geometry()
-
 # fix species variable
 ANO.sp$Species <- ANO.sp$art_navn
 unique(as.factor(ANO.sp$Species))
@@ -255,7 +292,8 @@ ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requ
                               "hovedtype_rute","kartleggingsenhet_1m2",
                               "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
                               "tungekjoretoy","slitasje",
-                              "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning"
+                              "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning",
+                              "bio1","bio10","bio11","bio12","bio16","bio17","bio5","bio6"
                  )],#removed "SHAPE" which didn't exist in the dataset
                  by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
 # y: "hovedoekosystem_punkt",
@@ -280,7 +318,7 @@ ANO.dat <- ANO.dat %>% st_transform(crs = st_crs(veg_zones))
 ANO_veg_zones <- terra::extract(veg_zones, vect(ANO.dat))
 ANO.dat <- cbind(ANO.dat, ANO_veg_zones[,2])
 rm(ANO_veg_zones)
-colnames(ANO.dat)[24] <- "veg_zone"
+colnames(ANO.dat)[32] <- "veg_zone"
 
 # filter out all veg-zones that are not alpine
 ANO.fjell <- ANO.dat %>% filter(veg_zone>=2)
