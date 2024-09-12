@@ -24,14 +24,12 @@ rastlist <- list.files(path = "P:/823001_18_metodesats_analyse_23_26_roos/climat
 library(gtools)
 rastlist = mixedsort(sort(rastlist))
 climate <- list()
-climate[['bio1']]  <- terra::rast(rastlist[1])[['C17']]
-climate[['bio5']]  <- terra::rast(rastlist[2])[['C17']]
-climate[['bio6']]  <- terra::rast(rastlist[3])[['C17']]
-climate[['bio10']]  <- terra::rast(rastlist[4])[['C17']]
-climate[['bio11']]  <- terra::rast(rastlist[5])[['C17']]
-climate[['bio12']]  <- terra::rast(rastlist[6])[['C17']]
-climate[['bio16']]  <- terra::rast(rastlist[7])[['C17']]
-climate[['bio17']]  <- terra::rast(rastlist[8])[['C17']]
+climate[['bio1']]  <- terra::rast(rastlist[1])[['period6']]
+climate[['bio10']]  <- terra::rast(rastlist[2])[['period6']]
+climate[['bio11']]  <- terra::rast(rastlist[3])[['period6']]
+climate[['bio12']]  <- terra::rast(rastlist[4])[['period6']]
+climate[['bio16']]  <- terra::rast(rastlist[5])[['period6']]
+climate[['bio17']]  <- terra::rast(rastlist[6])[['period6']]
 
 
 # worldclim variable codes
@@ -41,8 +39,7 @@ climate[['bio17']]  <- terra::rast(rastlist[8])[['C17']]
 #BIO12 = Annual Precipitation
 #BIO16 = Precipitation of Wettest Quarter
 #BIO17 = Precipitation of Driest Quarter
-#BIO5 = Max Temperature of Warmest Month
-#BIO6 = Min Temperature of Coldest Month
+
 
 ## adding climate
 # extract climate info for ANO points and merge with ANO.geo
@@ -54,7 +51,8 @@ for (i in 1:length(climate) ) {
   # add climate to ANO.geo data
   ANO.geo <- cbind(ANO.geo, ANO_biox[,2])
 }
-colnames(ANO.geo)[68:75] <- names(climate)
+colnames(ANO.geo)
+colnames(ANO.geo)[68:73] <- names(climate)
 
 ## workaround for being able to make ANO.geo derived data frames further down the line into spatial objects
 # store CRS
@@ -293,7 +291,7 @@ ANO.dat <- merge(x=ANO.sp[,c("ParentGlobalID","Species","art_dekning","Cold_requ
                               "groeftingsintensitet","bruksintensitet","beitetrykk","slatteintensitet",
                               "tungekjoretoy","slitasje",
                               "vedplanter_total_dekning","busker_dekning","tresjikt_dekning","roesslyng_dekning",
-                              "bio1","bio10","bio11","bio12","bio16","bio17","bio5","bio6"
+                              "bio1","bio10","bio11","bio12","bio16","bio17"
                  )],#removed "SHAPE" which didn't exist in the dataset
                  by.x="ParentGlobalID", by.y="GlobalID", all.x=T)
 # y: "hovedoekosystem_punkt",
@@ -318,7 +316,7 @@ ANO.dat <- ANO.dat %>% st_transform(crs = st_crs(veg_zones))
 ANO_veg_zones <- terra::extract(veg_zones, vect(ANO.dat))
 ANO.dat <- cbind(ANO.dat, ANO_veg_zones[,2])
 rm(ANO_veg_zones)
-colnames(ANO.dat)[32] <- "veg_zone"
+colnames(ANO.dat)[30] <- "veg_zone"
 
 # filter out all veg-zones that are not alpine
 ANO.fjell <- ANO.dat %>% filter(veg_zone>=2)
