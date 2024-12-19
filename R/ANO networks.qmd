@@ -44,11 +44,23 @@ Sys.setlocale(locale='no_NB.utf8')
 
 #load libraries
 library(reshape)
+library(leaflet)
+library(sf)
 library(vegan)
+library(plotbiomes)
 library(bipartite)
 library(tidyverse)
 library(randomcoloR)
 library(visNetwork)
+library(rnaturalearth)
+library(plotly)
+library(plotbiomes)
+library(viridis)
+library(ggpubr)
+
+#Installs package for Whittaker climate graph
+#if (!require(devtools)) install.packages("devtools")
+#devtools::install_github("valentinitnelav/plotbiomes")
 
 #Installs the github version (2.19) of bipartite, https://github.com/biometry/bipartite/issues/17
 #library(devtools)
@@ -86,7 +98,7 @@ unique(ANO.fjell$Species)
 ANO.fjell %>% distinct(Species) %>% arrange(Species)
 str(ANO.fjell)
 unique(ANO.fjell$ano_flate_id)#list the unique flate IDs
-
+unique(ANO.fjell$Site)
 
 ```
 
@@ -155,7 +167,7 @@ ANO.fjell %>%
 
 #Create a plot of how often each of the Habitat types (grunntyper) is recorded
 ANO.fjell %>% 
-  ggplot(aes(x = reorder(Habitat_type, Habitat_type, function(x)-length(x)))) + 
+  ggplot(aes(x = reorder(Habitat_type, Habitat_type, function(x)-length(x)))) +
   geom_bar()+
   xlab("Habitat type (grunntype)")+
   ylab("Number of ANO-ruter")
@@ -173,39 +185,29 @@ ANO.sr.avg <- ANO.sr %>%
   arrange(desc(Species_richness)) #orders to view the most species rich nature type first 
 
 #Correlate how often a habitat type is recorded vs its average species richness
-
 left_join(ANO.sr.avg, ANO.habitat.type, by = "Habitat_type") %>% 
   ggplot(aes(x = n, y = Species_richness)) +
   geom_point()
 
 #plot species richness per Ecosystem type (hovedtype)
-
 ANO.fjell %>% 
-  group_by(Ecosy_type) %>% 
+  group_by(Plot) %>% 
+  summarise(Species_richness = n(), Ecosystem_type = first(Ecosystem_type)) %>%   group_by(Ecosystem_type) %>% 
   summarise(Species_richness = mean(Species_richness)) %>% 
-  ggplot(aes(x = reorder(Habitat_type, Habitat_type, function(x)-length(x)))) + 
-  geom_bar()+
-  xlab("Habitat type (grunntype)")+
-  ylab("Number of ANO-ruter")
-
-
-
-
-
-
-
-
-
+  ggplot(aes(x = reorder(Ecosystem_type, Ecosystem_type, function(x)-length(x)), y = Species_richness)) +
+  geom_bar(stat = "identity")+
+  xlab("Ecosystem type")+
+  ylab("Species richness")
 
 
 # Calculate how frequently the redlist categories occur per nature type
 habitat.RL <- ANO.fjell %>% 
-  select(kartleggingsenhet_1m2, Species, Kategori.2021) %>% 
-  mutate(Kategori.2021 = if_else(is.na(Kategori.2021), "IE", Kategori.2021)) %>%   #"NA" is an unfortunately classification to use here, change them to "ikke egnet": "IE"
-  group_by(kartleggingsenhet_1m2) %>% 
+  select(Habitat_type, Species, RL_status_2021) %>% 
+  mutate(RL_status_2021 = if_else(is.na(RL_status_2021), "IE", RL_status_2021)) %>%   #"NA" is an unfortunately classification to use here, change them to "ikke egnet": "IE"
+  group_by(Habitat_type) %>% 
   distinct(Species, .keep_all = TRUE) %>% #creates a species list per NiN nature type and their redlist status
   summarise("Number of species" = n(),
-    across(Kategori.2021, list(IE = ~ sum(. == "IE"),
+    across(RL_status_2021, list(IE = ~ sum(. == "IE"),
                                 LC = ~ sum(. == "LC"),
                                 DD = ~ sum(. == "DD"),
                                 NT = ~ sum(. == "NT"), 
@@ -214,21 +216,21 @@ habitat.RL <- ANO.fjell %>%
                                 CR = ~ sum(. == "CR"),
                                 RE = ~ sum(. == "RE")))) %>% 
   rowwise() %>% 
-  mutate(RL = sum(Kategori.2021_DD, Kategori.2021_NT, Kategori.2021_VU, 
-                    Kategori.2021_EN, Kategori.2021_CR, Kategori.2021_RE), 
-         TS = sum(Kategori.2021_VU, Kategori.2021_EN, Kategori.2021_CR)) %>% #add number of readlisted species (DD-RE), and threatened species (VU, EN, CR)
-  arrange(desc(RL))#order nature types by most redlisted species: T27-C-6 (kalkfattig og intermediaer rabbepreget blokkmark) has most RL species
+  mutate(RL = sum(RL_status_2021_DD, RL_status_2021_NT, RL_status_2021_VU, 
+                    RL_status_2021_EN, RL_status_2021_CR, RL_status_2021_RE), 
+         TS = sum(RL_status_2021_VU, RL_status_2021_EN, RL_status_2021_CR)) %>% #add number of redlisted species (DD-RE), and threatened species (VU, EN, CR)
+  arrange(desc(RL))#order nature types by most redlisted species: T22-C-3 (kalkrik fjellgrashei) has most RL species
 
 #Calculate community weighted value for cold requirement per ANOplot
 ANO.fjell %>% 
-  group_by(ano_punkt_id) %>% 
-  summarise(cwm_cold_requirement = weighted.mean(Cold_requirement, rel_dekning, na.rm = TRUE))
+  group_by(Plot) %>% 
+  summarise(cwm_cold_requirement = weighted.mean(Cold_requirement, Cover_rel, na.rm = TRUE))
 
 #Calculate community weighted value or cold requirement per NiN nature type
 #Ruben: not sure if this is the best way to do it?
 habitat.cwm.cold<- ANO.fjell %>% 
-  group_by(kartleggingsenhet_1m2) %>% 
-  summarise(cwm_cold_requirement = weighted.mean(Cold_requirement, rel_dekning, na.rm = TRUE)) %>% 
+  group_by(Habitat_type) %>% 
+  summarise(cwm_cold_requirement = weighted.mean(Cold_requirement, Cover_rel, na.rm = TRUE)) %>% 
   arrange(desc(cwm_cold_requirement))
 
 #This gives the exact same result:
@@ -247,7 +249,7 @@ We can expect a correlation between the number of redlisted species and the cold
 
 #combine data
 RL.cold <- habitat.RL %>% 
-  left_join(habitat.cwm.cold, by = "kartleggingsenhet_1m2")
+  left_join(habitat.cwm.cold, by = "Habitat_type")
 
 RL.cold %>% 
   ggplot(aes(x = cwm_cold_requirement, y = RL)) +
@@ -255,15 +257,104 @@ RL.cold %>%
 
 ```
 
-Now, let's make some figures to help explore the data!
+```         
+```
 
-First, we can make a figure of how often different hovedtyper are registered.
+## Map and climate
 
-```{r Create figure for }
+```{r}
+#Create climate data
+clim <- ANO.fjell %>% 
+  select(Site, bio1, bio12, Long) %>% 
+  group_by(Site) %>% 
+  slice(1)
+
+#Create a data frame with coordinates
+coords <- ANO.fjell %>% 
+  group_by(Site) %>% # Group by Site ID
+  slice_head(n = 1) %>% 
+  select(Lat, Long)
+
+sites_sf <- st_as_sf(coords, coords = c("Lat", "Long"), crs = 32633)
+sites_wgs84 <- st_transform(sites_sf, crs = 4326)
+wgs_coordinates <- st_coordinates(sites_wgs84)
+latitude <- wgs_coordinates[, "Y"]
+latitude <- data.frame(
+  Site = sites_wgs84$Site,
+  Latitude = latitude)
+
+#Add latitudes to clim data
+clim <- clim %>% 
+  left_join(., latitude, by = "Site")
+
+#Load background map for Norway
+norway <- rnaturalearth::ne_countries(country = "Norway", scale = "medium", returnclass = "sf")
+
+#Exclude Svalbard 
+norway_mainland <- norway %>%
+  filter(!grepl("Svalbard", name)) %>%
+  st_crop(ymin = 57, ymax = 72, xmin = 4, xmax = 31)
+
+#Create map
+map <- ggplot() +
+  geom_sf(data = norway_mainland, fill = "lightblue", color = "gray") +
+  geom_sf(data = sites_wgs84, color = "black", size = 1) +
+  theme_minimal() +
+  labs(x = "Longitude", y = "Latitude") +
+  theme_light()
+
+ggsave(plot = map, "~/Projects/ANO SATS/ANO_network_SATS/Output/map.jpeg")
+
+#Create Whittaker climate plot with sites plotted, colored by latitude
+p_climate <- whittaker_base_plot()+
+  geom_point(data = clim, aes(x = bio1, y = bio12/10, colour = Latitude)) +
+  theme_light() + 
+  scale_colour_viridis(name="Latitude (°N)", direction = -1, option = "cividis") + coord_fixed(ratio = 0.1)
+
+ggsave(plot = p_climate, "~/Projects/ANO SATS/ANO_network_SATS/Output/Whittaker climates.jpeg")
+```
+
+## Climate data
+
+### Climate space - Whitaker biome graph
+
+```{r}
+
+clim <- ANO.fjell %>% 
+  select(Site, bio1, bio12, Long) %>% 
+  group_by(Site) %>% 
+  slice(1)
+
+ggplot(data = clim, aes(x = bio1, y = bio12)) +
+  geom_point(aes(colour = Long))
+
+whittaker_base_plot()+
+  geom_point(data = clim, aes(x = bio1, y = bio12/10, colour = Long)) +
+  theme_light()
+  
+
+#Maybe we can calculate continentality? https://www.meteotemplate.com/template/plugins/continentality/index.php
+
+#Combine with the map
+
+
+
 
 ```
 
-### Building network models
+### Create 3D plot
+
+```{r}
+plot_ly(ANO.fjell, x = ~bio1, y = ~bio12, z = ~Long, type = 'scatter3d', mode = 'markers',
+        marker = list(size = 3, color = ~z, colorscale = 'Viridis')) %>%
+  layout(scene = list(
+    xaxis = list(title = "X-axis"),
+    yaxis = list(title = "Y-axis"),
+    zaxis = list(title = "Z-axis")
+  ))
+```
+
+## Building network models
 
 #### Preparing data for analyses
 
