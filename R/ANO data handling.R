@@ -318,6 +318,19 @@ ANO.dat <- cbind(ANO.dat, ANO_veg_zones[,2])
 rm(ANO_veg_zones)
 colnames(ANO.dat)[30] <- "veg_zone"
 
+## making a major ecosystem-type variable based on both NiN-hovedtyper and vegetation zones
+ANO.dat <- ANO.dat %>% 
+  mutate(hoek=case_when(hovedtype_rute %in% c("T4","T30") ~ "Forest",
+                        hovedtype_rute %in% c("T3","T7","T9","T10","T14","T19","T22","T26","T28") ~ "AlpineArctic",
+                        hovedtype_rute %in% c("V1","V2","V3","V4","V5","V6","V7","V8","V9","V10","V11","V12","V13","V") ~ "Wetland",
+                        hovedtype_rute %in% c("T31","T32","T33","T34") ~ "SemiNat",
+                        hovedtype_rute %in% c("T2","T6","T12","T21","T24","T29") ~ "OpenLowland",
+                        hovedtype_rute %in% c("T35","T36","T37","T38","T39","T40","T41","T42","T43","T44","T45") ~ "Altered",
+                        hovedtype_rute %in% c("F4","F8","L16","O2","F","L","L4") ~ "AquMar",
+                        hovedtype_rute %in% c("T","T1","T5","T13","T16","T17","T18","T20","T25","T27","ikk") & veg_zone %in% c(4,3,2) ~ "AlpineArctic",
+                        hovedtype_rute %in% c("T","T1","T5","T13","T16","T17","T18","T20","T25","T27","ikk") & veg_zone %in% c(0,1) ~ "OpenLowland")
+  )
+
 # filter out all veg-zones that are not alpine
 ANO.fjell <- ANO.dat %>% filter(veg_zone>=2)
 
