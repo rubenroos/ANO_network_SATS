@@ -44,16 +44,53 @@ NiNtrans <- NiNtrans %>%
 NiNtrans <- NiNtrans %>%
   distinct(NIN2_kartleggingsenhet, .keep_all = TRUE)
 
-### Redlist
-redlist <- read.csv("P:/823001_18_metodesats_analyse_23_26_roos/Tyler and Redlist/redlist2021new.txt", sep="\t", header=T)
-head(redlist)
-redlist <- redlist %>% 
-  filter(Artsgruppe=="Karplanter") %>%
-  filter(Vurderingsomraade=="Norge")
+#### upload maps for vegetation zones and sections
+vegzones <- st_read("R:/GeoSpatialData/BiogeographicalRegions/Norway_VegetationZones_Moen/Original/Vector/soner.shp")
+vegsections <- st_read("R:/GeoSpatialData/BiogeographicalRegions/Norway_VegetationZones_Moen/Original/Vector/seksjoner.shp",crs=st_crs(vegzones) )
 
-### upload vegetation zone map
-veg_zones <- rast("P:/823001_18_metodesats_analyse_23_26_roos/Naturindeks_N50_vegetasjonssoner_25m.tif")
+plot(vegzones['NAVN'])
+plot(vegsections['NAVN'])
 
+### merging classes in vegzones and vegsections
+vegzones <- vegzones %>%
+  mutate(KLASSE = as.factor(KLASSE)) %>%
+  mutate(KLASSE2= case_when(KLASSE %in% c("1","2","3")~"11",
+                            KLASSE %in% c("4","5")~"12",
+                            KLASSE %in% c("6")~"13"
+  )
+  )
+
+vegzones <- vegzones %>%
+  mutate(NAVN = as.factor(NAVN)) %>%
+  mutate(NAVN2= case_when(NAVN %in% c("Nemoral","Boreonemoral","S°rboreal")~"Nemoral_soerboreal",
+                          NAVN %in% c("Mellomboreal","Nordboreal")~"Mellom_nordboreal",
+                          NAVN %in% c("Alpin")~"Alpin"
+  )
+  )
+
+plot(vegzones['KLASSE2'])
+plot(vegzones['NAVN2'])
+
+
+
+vegsections <- vegsections %>%
+  mutate(KLASSE = as.factor(KLASSE)) %>%
+  mutate(KLASSE2= case_when(KLASSE %in% c("1","2")~"11",
+                            KLASSE %in% c("3","4","5")~"12",
+                            KLASSE %in% c("6")~"13"
+  )
+  )
+
+vegsections <- vegsections %>%
+  mutate(NAVN = as.factor(NAVN)) %>%
+  mutate(NAVN2= case_when(NAVN %in% c("O3t-Vintermild","O3-Sterkt ocean")~"O3_O3t",
+                          NAVN %in% c("O2-Klart oceani","O1-Svakt oceani","OC_Overgangssek")~"OC_O2",
+                          NAVN %in% c("C1-Svakt kontin")~"C1"
+  )
+  )
+
+plot(vegsections['KLASSE2'])
+plot(vegsections['NAVN2'])
 
 
 #### data handling - ANO data ####
@@ -153,14 +190,84 @@ ANO.dat$area <- ANO.dat$andel_kartleggingsenhet_250m2/100*250
 
 ANO.dat[,c(1,4,7,8)]
 
+## adding geometry
+ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
+
+
+
+
+
+
+#### area of types in vegzones and vegsections ####
+
+### adding vegzones & vesections to ANO.dat
+# change the CRS of ANO.dat to the CRS of the vegzones and -sections maps
+ANO.dat <- st_transform(ANO.dat, crs = st_crs(vegzones))
+
+
+tm_shape(vegzones) +
+  tm_fill('NAVN2', labels="", title="", legend.show = TRUE) + 
+  tm_borders() +
+  tm_shape(ANO.dat) +
+  tm_dots()
+
+
+ANO.dat <- st_join(ANO.dat,vegzones[,c("KLASSE2","NAVN2")],join= st_nearest_feature)
+names(ANO.dat)[c(9,10)] <- c("zone_class","zone_name")
+
+ANO.dat <- st_join(ANO.dat,vegsections[,c("KLASSE2","NAVN2")],join= st_nearest_feature)
+names(ANO.dat)[c(11,12)] <- c("section_class","section_name")
+
+### area calculations
+# drop geometry from ANO.dat
+ANO.dat <- ANO.dat %>% st_drop_geometry()
+
+# calculate area for Norway
+M020_Norge_area <- ANO.dat %>%
+  group_by(M020_kode2) %>%
+  summarize(Norge_area=sum(area,na.rm=T))
+
+# calculate area for zones
+M020_zone_area <- ANO.dat %>%
+  group_by(M020_kode2,zone_name) %>%
+  summarize(zone_area=sum(area,na.rm=T))
+
+# calculate area for sections
+M020_section_area <- ANO.dat %>%
+  group_by(M020_kode2,section_name) %>%
+  summarize(section_area=sum(area,na.rm=T))
+
+## checking if there's any area for points outside zones or sections
+ANO.dat[is.na(ANO.dat$zone_class),]
+ANO.dat[is.na(ANO.dat$section_class),]
+
+## make wide versions and merge them
+M020_zone_area <- pivot_wider(M020_zone_area,names_from = zone_name, values_from = zone_area)
+M020_section_area <- pivot_wider(M020_section_area,names_from = section_name, values_from = section_area)
+
+# merge the area-objects
+cbind(M020_Norge_area,M020_zone_area,M020_section_area)
+M020_area_mapped <- cbind(M020_Norge_area,M020_zone_area[,-1],M020_section_area[,-1])
+
+### ratio calculations
+mapped_area <- data.frame(area_type=c("total", "Alpin", "Mellom_nordboreal", "Nemoral_soerboreal", "C1", "O3_O3t", "OC_O2"), 
+                          area=NA)
+
 dim(ANO.dat)
 length(unique(ANO.dat$ano_punkt_id))
 
-M020_area <- ANO.dat %>%
-  group_by(M020_kode2) %>%
-  summarize(area_Norge=sum(area))
+mapped_area[1,2] <- length(unique(ANO.dat$ano_punkt_id))*250
+mapped_area[2,2] <- length(unique(ANO.dat[ANO.dat$zone_name=="Alpin","ano_punkt_id"]))*250
+mapped_area[3,2] <- length(unique(ANO.dat[ANO.dat$zone_name=="Mellom_nordboreal","ano_punkt_id"]))*250
+mapped_area[4,2] <- length(unique(ANO.dat[ANO.dat$zone_name=="Nemoral_soerboreal","ano_punkt_id"]))*250
+mapped_area[5,2] <- length(unique(ANO.dat[ANO.dat$section_name=="C1","ano_punkt_id"]))*250
+mapped_area[6,2] <- length(unique(ANO.dat[ANO.dat$section_name=="O3_O3t","ano_punkt_id"]))*250
+mapped_area[7,2] <- length(unique(ANO.dat[ANO.dat$section_name=="OC_O2","ano_punkt_id"]))*250
 
-mapped_area <- length(unique(ANO.dat$ano_punkt_id))*250
+M020_area_ratio <- M020_area_mapped
+
+M020_area_ratio$Norge_area <- M020_area_mapped$Norge_area/mapped_area[1,2]
+
 
 M020_area <- M020_area %>%
   mutate(ratio_Norge = area_Norge/mapped_area)
@@ -168,12 +275,3 @@ M020_area <- M020_area %>%
 summary(M020_area)
 
 M020_area[M020_area$ratio_Norge > 0.049,]
-
-
-
-
-
-
-## adding geometry
-ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
-
