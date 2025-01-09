@@ -57,8 +57,8 @@ vegsections <- vegsections %>%
   group_by(Seksjon_na) %>%
   summarise(geometry = st_union(geometry))
 
-plot(vegzones['Sone_navn'])
-plot(vegsections['Seksjon_na'])
+#plot(vegzones['Sone_navn'])
+#plot(vegsections['Seksjon_na'])
 
 # combine certain zones and sections
 vegzones <- vegzones %>%
@@ -72,8 +72,8 @@ vegsections <- vegsections %>%
                                  TRUE ~ Seksjon_na)
   ) 
 
-plot(vegzones['Sone_navn2'])
-plot(vegsections['Seksjon_na2'])
+#plot(vegzones['Sone_navn2'])
+#plot(vegsections['Seksjon_na2'])
 
 # combining zones & sections
 comb_zones_sections <- st_intersection(vegzones, vegsections)
@@ -83,7 +83,7 @@ comb_zones_sections <- comb_zones_sections %>%
   mutate(sone_sek = paste0(Sone_navn2,"_", Seksjon_na2))
 
 
-plot(comb_zones_sections['sone_sek'])
+#plot(comb_zones_sections['sone_sek'])
 
 
 
@@ -94,69 +94,6 @@ head(ANO.geo)
 ANO.geo$hovedtype_rute <- substr(ANO.geo$kartleggingsenhet_1m2,1,3) # take the 3 first characters
 ANO.geo$hovedtype_rute <- gsub("-", "", ANO.geo$hovedtype_rute) # remove hyphon
 unique(as.factor(ANO.geo$hovedtype_rute))
-
-## fix NiN-variables
-colnames(ANO.geo)
-colnames(ANO.geo)[41:46] <- c("groeftingsintensitet",
-                              "bruksintensitet",
-                              "beitetrykk",
-                              "slatteintensitet",
-                              "tungekjoretoy",
-                              "slitasje")
-head(ANO.geo)
-
-# remove variable code in the data
-ANO.geo$groeftingsintensitet <- gsub("7GR-GI_", "", ANO.geo$groeftingsintensitet) 
-unique(ANO.geo$groeftingsintensitet)
-ANO.geo$groeftingsintensitet <- gsub("X", "NA", ANO.geo$groeftingsintensitet)
-unique(ANO.geo$groeftingsintensitet)
-ANO.geo$groeftingsintensitet <- as.numeric(ANO.geo$groeftingsintensitet)
-unique(ANO.geo$groeftingsintensitet)
-
-ANO.geo$bruksintensitet <- gsub("7JB-BA_", "", ANO.geo$bruksintensitet) 
-unique(ANO.geo$bruksintensitet)
-ANO.geo$bruksintensitet <- gsub("X", "NA", ANO.geo$bruksintensitet)
-unique(ANO.geo$bruksintensitet)
-ANO.geo$bruksintensitet <- as.numeric(ANO.geo$bruksintensitet)
-unique(ANO.geo$bruksintensitet)
-
-ANO.geo$beitetrykk <- gsub("7JB-BT_", "", ANO.geo$beitetrykk) 
-unique(ANO.geo$beitetrykk)
-ANO.geo$beitetrykk <- gsub("X", "NA", ANO.geo$beitetrykk)
-unique(ANO.geo$beitetrykk)
-ANO.geo$beitetrykk <- as.numeric(ANO.geo$beitetrykk)
-unique(ANO.geo$beitetrykk)
-
-ANO.geo$slatteintensitet <- gsub("7JB-SI_", "", ANO.geo$slatteintensitet) 
-unique(ANO.geo$slatteintensitet)
-ANO.geo$slatteintensitet <- gsub("X", "NA", ANO.geo$slatteintensitet)
-unique(ANO.geo$slatteintensitet)
-ANO.geo$slatteintensitet <- as.numeric(ANO.geo$slatteintensitet)
-unique(ANO.geo$slatteintensitet)
-
-ANO.geo$tungekjoretoy <- gsub("7TK_", "", ANO.geo$tungekjoretoy) 
-unique(ANO.geo$tungekjoretoy)
-ANO.geo$tungekjoretoy <- gsub("X", "NA", ANO.geo$tungekjoretoy)
-unique(ANO.geo$tungekjoretoy)
-ANO.geo$tungekjoretoy <- as.numeric(ANO.geo$tungekjoretoy)
-unique(ANO.geo$tungekjoretoy)
-
-ANO.geo$slitasje <- gsub("7SE_", "", ANO.geo$slitasje) 
-unique(ANO.geo$slitasje)
-ANO.geo$slitasje <- gsub("X", "NA", ANO.geo$slitasje)
-unique(ANO.geo$slitasje)
-ANO.geo$slitasje <- as.numeric(ANO.geo$slitasje)
-unique(ANO.geo$slitasje)
-
-## check that every point is present only once
-length(levels(as.factor(ANO.geo$ano_flate_id)))
-length(levels(as.factor(ANO.geo$ano_punkt_id)))
-summary(as.factor(ANO.geo$ano_punkt_id))
-# there's a triple and many double presences, 
-# probably some wrong registrations of point numbers, but also double registrations
-# there's even entire sites (flater) with all points double
-#write.csv(summary(as.factor(ANO.geo$ano_punkt_id), maxsum=330), "Output/ANO.punktfrekvens.csv")
-
 
 ## replace information in points that have not been mapped at the circle level with NA
 unique(ANO.geo$kartleggingsenhet_250m2)
@@ -181,19 +118,10 @@ summary(as.factor(ANO.dat$M020_kode2))
 # transfer info from "kartleggingsenhet_250m2" to "M020_kode2" for NA's in "M020_kode2"
 ANO.dat <- ANO.dat %>%   mutate(M020_kode3 = ifelse(is.na(M020_kode2), as.character(kartleggingsenhet_250m2), M020_kode2))
 
-ANO.dat[,c(1,4,7)]
-
 ANO.dat$area <- ANO.dat$andel_kartleggingsenhet_250m2/100*250
-
-ANO.dat[,c(1,4,7,8)]
 
 ## adding geometry
 ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
-
-
-
-
-
 
 #### area of types in vegzones and vegsections ####
 
@@ -202,17 +130,17 @@ ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
 ANO.dat <- st_transform(ANO.dat, crs = st_crs(vegzones))
 
 
-tm_shape(vegzones) +
-  tm_fill('Sone_navn2', labels="", title="", legend.show = TRUE) + 
-  tm_borders() +
-  tm_shape(ANO.dat) +
-  tm_dots()
+#tm_shape(vegzones) +
+#  tm_fill('Sone_navn2', labels="", title="", legend.show = TRUE) + 
+#  tm_borders() +
+#  tm_shape(ANO.dat) +
+#  tm_dots()
 
-tm_shape(vegsections) +
-  tm_fill('Seksjon_na2', labels="", title="", legend.show = TRUE) + 
-  tm_borders() +
-  tm_shape(ANO.dat) +
-  tm_dots()
+#tm_shape(vegsections) +
+#  tm_fill('Seksjon_na2', labels="", title="", legend.show = TRUE) + 
+#  tm_borders() +
+#  tm_shape(ANO.dat) +
+#  tm_dots()
 
 
 ANO.dat <- st_join(ANO.dat,vegzones[,c("Sone_navn2")],join= st_nearest_feature)
@@ -259,7 +187,6 @@ M020_section_area <- pivot_wider(M020_section_area,names_from = section_name, va
 M020_zone_section_area <- pivot_wider(M020_zone_section_area,names_from = zone_section_name, values_from = zone_section_area)
 
 # merge the area-objects
-cbind(M020_Norge_area,M020_zone_area,M020_section_area)
 M020_area_mapped <- cbind(M020_Norge_area,M020_zone_area[,-1],M020_section_area[,-1],M020_zone_section_area[,-1])
 
 ### ratio calculations
@@ -356,13 +283,5 @@ M020_area_predicted$'Mellom_Nordbor_Svakt kontinental seksjon (C1)' <- M020_area
 # how much area is predicted in total (of 322 653 sqkm)
 M020_area_predicted %>% summarise(across(Norge_area:'Mellom_Nordbor_Svakt kontinental seksjon (C1)' , sum, na.rm=T)) # less area is predicted since the ANO.data includes points where only part of the area was mapped
 
-M020_area <- M020_area %>%
-  mutate(ratio_Norge = area_Norge/mapped_area)
-
-summary(M020_area)
-
-M020_area[M020_area$ratio_Norge > 0.049,]
-
-
-write.csv2(M020_area_predicted,"Output/M020_area_predicted_new.csv")
-write.csv2(M020_area_mapped,"Output/M020_area_mapped_new.csv")
+write.csv2(M020_area_predicted,"Output/M020_area_predicted_VB.csv")
+write.csv2(M020_area_mapped,"Output/M020_area_mapped_VB.csv")
