@@ -30,7 +30,7 @@ ANO.geo <- ANO.geo %>%
 #write.table(ANO.sp, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Data/ANO_sp.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
 
 ### translation key NiN2_5k to NiN3_20k
-NiNtrans <- read_xlsx("C:/Users/joachim.topper/OneDrive - NINA/work/projects/NiN/NiN3/NiN2_5k_NiN3_20k.xlsx", sheet="Typer2")
+NiNtrans <- read_xlsx("C:/Users/joachim.topper/OneDrive - NINA/work/projects/NiN/NiN3/NiN2_5k_NiN3_20k.xlsx", sheet="Typer_CorrRune")
 head(NiNtrans)
 summary(NiNtrans)
 names(NiNtrans)
@@ -48,18 +48,19 @@ NiNtrans <- NiNtrans %>%
 vegzones <- st_read("R:/GeoSpatialData/BiogeographicalRegions/Norway_VegetationZones_Moen/Original/Vector/soner.shp")
 vegsections <- st_read("R:/GeoSpatialData/BiogeographicalRegions/Norway_VegetationZones_Moen/Original/Vector/seksjoner.shp",crs=st_crs(vegzones) )  # this file seems to lack a crs, assuming it's the same as for zones (check if map makes sense)
 
+# dissolve tiles
+vegzones <- vegzones %>%
+  group_by(NAVN) %>%
+  summarise(geometry = st_union(geometry))
+
+vegsections <- vegsections %>%
+  group_by(NAVN) %>%
+  summarise(geometry = st_union(geometry))
+
 #plot(vegzones['NAVN'])
 #plot(vegsections['NAVN'])
 
 ### merging classes in vegzones and vegsections
-vegzones <- vegzones %>%
-  mutate(KLASSE = as.factor(KLASSE)) %>%
-  mutate(KLASSE2= case_when(KLASSE %in% c("1","2","3")~"11",
-                            KLASSE %in% c("4","5")~"12",
-                            KLASSE %in% c("6")~"13"
-  )
-  )
-
 vegzones <- vegzones %>%
   mutate(NAVN = as.factor(NAVN)) %>%
   mutate(NAVN2= case_when(NAVN %in% c("Nemoral","Boreonemoral","S°rboreal")~"Nemoral_soerboreal",
@@ -68,18 +69,8 @@ vegzones <- vegzones %>%
   )
   )
 
-#plot(vegzones['KLASSE2'])
 #plot(vegzones['NAVN2'])
 
-
-
-vegsections <- vegsections %>%
-  mutate(KLASSE = as.factor(KLASSE)) %>%
-  mutate(KLASSE2= case_when(KLASSE %in% c("1","2")~"11",
-                            KLASSE %in% c("3","4","5")~"12",
-                            KLASSE %in% c("6")~"13"
-  )
-  )
 
 vegsections <- vegsections %>%
   mutate(NAVN = as.factor(NAVN)) %>%
@@ -89,7 +80,6 @@ vegsections <- vegsections %>%
   )
   )
 
-#plot(vegsections['KLASSE2'])
 #plot(vegsections['NAVN2'])
 
 
@@ -133,6 +123,7 @@ summary(as.factor(ANO.dat$M020_kode2))
 # transfer info from "kartleggingsenhet_250m2" to "M020_kode2" for NA's in "M020_kode2"
 ANO.dat <- ANO.dat %>%   mutate(M020_kode3 = ifelse(is.na(M020_kode2), as.character(kartleggingsenhet_250m2), M020_kode2))
 
+# calculate area for each nature type in iech ANO point
 ANO.dat$area <- ANO.dat$andel_kartleggingsenhet_250m2/100*250
 
 # split one-to-several NiN3-types into separate rows
@@ -168,14 +159,14 @@ ANO.dat <- st_transform(ANO.dat, crs = st_crs(vegzones))
 #  tm_dots()
 
 
-ANO.dat <- st_join(ANO.dat,vegzones[,c("KLASSE2","NAVN2")],join= st_nearest_feature)
-names(ANO.dat)[c(13,14)] <- c("zone_class","zone_name")
+ANO.dat <- st_join(ANO.dat,vegzones[,c("NAVN2")],join= st_nearest_feature)
+names(ANO.dat)[c(13)] <- "zone_name"
 
-ANO.dat <- st_join(ANO.dat,vegsections[,c("KLASSE2","NAVN2")],join= st_nearest_feature)
-names(ANO.dat)[c(15,16)] <- c("section_class","section_name")
+ANO.dat <- st_join(ANO.dat,vegsections[,c("NAVN2")],join= st_nearest_feature)
+names(ANO.dat)[c(14)] <- "section_name"
 
 ANO.dat <- st_join(ANO.dat,comb_zones_sections[,c("sone_sek")],join= st_nearest_feature)
-names(ANO.dat)[c(17)] <- c("zone_section_name")
+names(ANO.dat)[c(15)] <- "zone_section_name"
 
 ### area calculations
 # drop geometry from ANO.dat
@@ -218,7 +209,7 @@ M020_area_mapped <- cbind(M020_Norge_area,M020_zone_area[,-1],M020_section_area[
 names(M020_area_mapped)
 area <- data.frame(area_type=c("total", "Mellom_nordboreal", "Alpin", "Nemoral_soerboreal", "O3_O3t", "OC_O2", "C1",
                                "Mellom_nordboreal_O3_O3t","Mellom_nordboreal_OC_O2","Alpin_OC_O2","Nemoral_soerboreal_O3_O3t","Alpin_C1",
-                               "Mellom_nordboreal_C1","Alpin_O3_O3t","Nemoral_soerboreal_OC_O2","Nemoral_soerboreal_C1"),
+                               "Mellom_nordboreal_C1","Nemoral_soerboreal_OC_O2","Alpin_O3_O3t","Nemoral_soerboreal_C1"),
                    mapped=NA,
                    total=NA)
 
@@ -239,14 +230,18 @@ area[10,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Alpin_OC_O2","an
 area[11,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Nemoral_soerboreal_O3_O3t","ano_punkt_id"]))*250
 area[12,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Alpin_C1","ano_punkt_id"]))*250
 area[13,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Mellom_nordboreal_C1","ano_punkt_id"]))*250
-area[14,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Alpin_O3_O3t","ano_punkt_id"]))*250
-area[15,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Nemoral_soerboreal_OC_O2","ano_punkt_id"]))*250
+area[14,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Nemoral_soerboreal_OC_O2","ano_punkt_id"]))*250
+area[15,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Alpin_O3_O3t","ano_punkt_id"]))*250
 area[16,2] <- length(unique(ANO.dat[ANO.dat$zone_section_name=="Nemoral_soerboreal_C1","ano_punkt_id"]))*250
 
 # this yields more area than the area that was actually mapped to be an ecosystem type (because parts of the area in some points was not mapped)
 M020_area_mapped %>% summarise(across(Norge_area:Nemoral_soerboreal_C1 , sum, na.rm=T))
 
 # total area per zone/section
+vegzones <- vegzones %>% mutate(AREA = st_area(geometry))
+vegsections <- vegsections %>% mutate(AREA = st_area(geometry))
+comb_zones_sections <- comb_zones_sections %>% mutate(AREA = st_area(geometry))
+
 area[1,3] <- vegzones %>% summarize(area.zones = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry()
 area[2,3] <- vegzones %>% group_by(NAVN2) %>% summarize(area.zones = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(NAVN2=='Mellom_nordboreal') %>% select(area.zones)
 area[3,3] <- vegzones %>% group_by(NAVN2) %>% summarize(area.zones = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(NAVN2=='Alpin') %>% select(area.zones)
@@ -260,8 +255,8 @@ area[10,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zone
 area[11,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zones_sections = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(sone_sek=='Nemoral_soerboreal_O3_O3t') %>% select(area.zones_sections)
 area[12,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zones_sections = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(sone_sek=='Alpin_C1') %>% select(area.zones_sections)
 area[13,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zones_sections = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(sone_sek=='Mellom_nordboreal_C1') %>% select(area.zones_sections)
-area[14,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zones_sections = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(sone_sek=='Alpin_O3_O3t') %>% select(area.zones_sections)
-area[15,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zones_sections = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(sone_sek=='Nemoral_soerboreal_OC_O2') %>% select(area.zones_sections)
+area[14,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zones_sections = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(sone_sek=='Nemoral_soerboreal_OC_O2') %>% select(area.zones_sections)
+area[15,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zones_sections = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(sone_sek=='Alpin_O3_O3t') %>% select(area.zones_sections)
 area[16,3] <- comb_zones_sections %>% group_by(sone_sek) %>% summarize(area.zones_sections = sum(AREA, na.rm = TRUE)) %>% st_drop_geometry() %>% filter(sone_sek=='Nemoral_soerboreal_C1') %>% select(area.zones_sections)
 
 area$total <- as.numeric(area$total)
@@ -283,8 +278,8 @@ M020_area_ratio$Alpin_OC_O2 <- M020_area_mapped$Alpin_OC_O2/area[10,2]
 M020_area_ratio$Nemoral_soerboreal_O3_O3t <- M020_area_mapped$Nemoral_soerboreal_O3_O3t/area[11,2]
 M020_area_ratio$Alpin_C1 <- M020_area_mapped$Alpin_C1/area[12,2]
 M020_area_ratio$Mellom_nordboreal_C1 <- M020_area_mapped$Mellom_nordboreal_C1/area[13,2]
-M020_area_ratio$Alpin_O3_O3t <- M020_area_mapped$Alpin_O3_O3t/area[14,2]
-M020_area_ratio$Nemoral_soerboreal_OC_O2 <- M020_area_mapped$Nemoral_soerboreal_OC_O2/area[15,2]
+M020_area_ratio$Nemoral_soerboreal_OC_O2 <- M020_area_mapped$Nemoral_soerboreal_OC_O2/area[14,2]
+M020_area_ratio$Alpin_O3_O3t <- M020_area_mapped$Alpin_O3_O3t/area[15,2]
 M020_area_ratio$Nemoral_soerboreal_C1 <- M020_area_mapped$Nemoral_soerboreal_C1/area[16,2]
 
 M020_area_predicted$Norge_area <- M020_area_ratio$Norge_area*area[1,3]
@@ -300,8 +295,8 @@ M020_area_predicted$Alpin_OC_O2 <- M020_area_ratio$Alpin_OC_O2*area[10,3]
 M020_area_predicted$Nemoral_soerboreal_O3_O3t <- M020_area_ratio$Nemoral_soerboreal_O3_O3t*area[11,3]
 M020_area_predicted$Alpin_C1 <- M020_area_ratio$Alpin_C1*area[12,3]
 M020_area_predicted$Mellom_nordboreal_C1 <- M020_area_ratio$Mellom_nordboreal_C1*area[13,3]
-M020_area_predicted$Alpin_O3_O3t <- M020_area_ratio$Alpin_O3_O3t*area[14,3]
-M020_area_predicted$Nemoral_soerboreal_OC_O2 <- M020_area_ratio$Nemoral_soerboreal_OC_O2*area[15,3]
+M020_area_predicted$Nemoral_soerboreal_OC_O2 <- M020_area_ratio$Nemoral_soerboreal_OC_O2*area[14,3]
+M020_area_predicted$Alpin_O3_O3t <- M020_area_ratio$Alpin_O3_O3t*area[15,3]
 M020_area_predicted$Nemoral_soerboreal_C1 <- M020_area_ratio$Nemoral_soerboreal_C1*area[16,3]
 
 

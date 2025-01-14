@@ -30,7 +30,7 @@ ANO.geo <- ANO.geo %>%
 #write.table(ANO.sp, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Data/ANO_sp.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
 
 ### translation key NiN2_5k to NiN3_20k
-NiNtrans <- read_xlsx("C:/Users/joachim.topper/OneDrive - NINA/work/projects/NiN/NiN3/NiN2_5k_NiN3_20k.xlsx", sheet="Typer")
+NiNtrans <- read_xlsx("C:/Users/joachim.topper/OneDrive - NINA/work/projects/NiN/NiN3/NiN2_5k_NiN3_20k.xlsx", sheet="Typer_CorrRune")
 head(NiNtrans)
 summary(NiNtrans)
 names(NiNtrans)
@@ -39,7 +39,7 @@ NiNtrans <- NiNtrans %>%
   filter(rødlistevurdering==1) %>%
   filter(NIN2_kartleggingsenhet!='NA' ) %>%
   filter(M020_kode2!='NA' ) %>%
-  select(NIN2_kartleggingsenhet,M020_kode2)
+  select(-rødlistevurdering)
 
 NiNtrans <- NiNtrans %>%
   distinct(NIN2_kartleggingsenhet, .keep_all = TRUE)
@@ -118,7 +118,17 @@ summary(as.factor(ANO.dat$M020_kode2))
 # transfer info from "kartleggingsenhet_250m2" to "M020_kode2" for NA's in "M020_kode2"
 ANO.dat <- ANO.dat %>%   mutate(M020_kode3 = ifelse(is.na(M020_kode2), as.character(kartleggingsenhet_250m2), M020_kode2))
 
+# calculate area for each nature type in iech ANO point
 ANO.dat$area <- ANO.dat$andel_kartleggingsenhet_250m2/100*250
+
+# split one-to-several NiN3-types into separate rows
+ANO.dat <- ANO.dat %>% separate_longer_delim(c(M020_kode3,andel), delim = "_")
+# calculate area share for the rows resulting form the splitting
+ANO.dat <- ANO.dat %>% 
+  mutate(andel = as.numeric(andel))
+ANO.dat[is.na(ANO.dat$andel),'andel'] <- 100
+
+ANO.dat$area <- ANO.dat$area*ANO.dat$andel/100
 
 ## adding geometry
 ANO.dat <- st_as_sf(ANO.dat,coords=c('lat','long'),crs=ANO.geo.crs, remove=F)
@@ -144,13 +154,13 @@ ANO.dat <- st_transform(ANO.dat, crs = st_crs(vegzones))
 
 
 ANO.dat <- st_join(ANO.dat,vegzones[,c("Sone_navn2")],join= st_nearest_feature)
-names(ANO.dat)[c(10)] <- c("zone_name")
+names(ANO.dat)[c(13)] <- c("zone_name")
 
 ANO.dat <- st_join(ANO.dat,vegsections[,c("Seksjon_na2")],join= st_nearest_feature)
-names(ANO.dat)[c(11)] <- c("section_name")
+names(ANO.dat)[c(14)] <- c("section_name")
 
 ANO.dat <- st_join(ANO.dat,comb_zones_sections[,c("sone_sek")],join= st_nearest_feature)
-names(ANO.dat)[c(12)] <- c("zone_section_name")
+names(ANO.dat)[c(15)] <- c("zone_section_name")
 
 ### area calculations
 # drop geometry from ANO.dat
