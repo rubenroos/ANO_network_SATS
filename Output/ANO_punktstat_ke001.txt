@@ -1,0 +1,392 @@
+kartleggingsenhet_1m2;n
+;535
+F;12
+F1-C-1;1
+F4-C-10;1
+F4-C-12;1
+F4-C-6;1
+F5-C-2;1
+F8-C-1;4
+F8-C-1 Elvevann;1
+I1;110
+I1-C-1;26
+I1-C-1 snø- og ;6
+L;11
+L1-C-4 Noe kalk;1
+L16-C-3;1
+L4-1;9
+L4-C-1;2
+L4-C-1 Kalkfatt;1
+L4-C-2;1
+L4-C-2 Litt kal;1
+L7-C-1 Svært ka;1
+O1-C-6 Moderat ;1
+O2-C-3;1
+O2-C-7 Moderat ;1
+O2-C-9;1
+T;5
+T1;158
+T1-C-1;201
+T1-C-1 lite tør;91
+T1-C-10;1
+T1-C-11;24
+T1-C-11 svakt i;8
+T1-C-12;3
+T1-C-12 sterkt ;9
+T1-C-2;178
+T1-C-2 uttørkin;52
+T1-C-3;20
+T1-C-3 lite utt;7
+T1-C-4;43
+T1-C-4 uttørkin;5
+T1-C-5;25
+T1-C-6;11
+T1-C-6 uttørkin;8
+T1-C-7;2
+T1-C-8;6
+T1-C-9;7
+T1-C-9 svakt in;2
+T12-C-1;1
+T12-C-2;4
+T13;30
+T13-C-1;113
+T13-C-1 kalkfat;31
+T13-C-10;4
+T13-C-10 kalkfa;4
+T13-C-11;6
+T13-C-12;2
+T13-C-12 interm;2
+T13-C-13;1
+T13-C-14 sterkt;1
+T13-C-2;32
+T13-C-2 kalkfat;5
+T13-C-3;3
+T13-C-4;23
+T13-C-4 interme;2
+T13-C-5;11
+T13-C-5 interme;1
+T13-C-7 sterkt ;1
+T13-C-8 sterkt ;3
+T13-C-9 sterkt ;1
+T14;5
+T14-C-1;224
+T14-C-1 kalkfat;59
+T14-C-2;19
+T14-C-2 kalkrik;7
+T16;4
+T16-C-1;4
+T16-C-2;8
+T16-C-2 interme;2
+T16-C-3;3
+T16-C-4;2
+T16-C-5;7
+T16-C-6;1
+T16-C-7;1
+T17-C-1;1
+T17-C-2;1
+T18;1
+T18-C-1;8
+T18-C-1 åpne fl;1
+T18-C-2;1
+T18-C-4;1
+T19;5
+T19-C-1;21
+T19-C-1 kalkfat;12
+T19-C-2;2
+T2;29
+T2-C-1;241
+T2-C-1 åpen kal;35
+T2-C-2;26
+T2-C-2 åpen kal;4
+T2-C-3;9
+T2-C-5;1
+T2-C-5 åpen sva;1
+T2-C-7;1
+T20-C-1;2
+T20-C-2;1
+T21-C-3;1
+T22-C-1;54
+T22-C-1 kalkfat;14
+T22-C-2;15
+T22-C-2 kalkfat;13
+T22-C-3;22
+T22-C-3 kalkrik;8
+T22-C-4;9
+T22-C-4 kalkrik;1
+T24-C-1;1
+T24-C-1 beskytt;1
+T25-C-2;3
+T26;2
+T26-C-1;6
+T26-C-2;2
+T26-C-3;28
+T26-C-3 grus- o;1
+T26-C-4;1
+T26-C-4 breforl;1
+T27;20
+T27-C-1;346
+T27-C-1 kalkfat;154
+T27-C-2;105
+T27-C-2 kalkfat;33
+T27-C-3;9
+T27-C-3 kalkrik;1
+T27-C-4;17
+T27-C-4 kalkrik;4
+T27-C-5;10
+T27-C-5 blokkma;8
+T27-C-6;45
+T27-C-6 kalkfat;2
+T27-C-7;6
+T29;1
+T29-C-1 stein- ;2
+T29-C-2;2
+T29-C-5;1
+T3;95
+T3-C-1;420
+T3-C-1 kalkfatt;83
+T3-C-10;8
+T3-C-11;23
+T3-C-11 sterkt ;7
+T3-C-12;10
+T3-C-13;57
+T3-C-13 interme;7
+T3-C-14;45
+T3-C-14 kalkrik;5
+T3-C-2;1419
+T3-C-2 kalkfatt;354
+T3-C-3;388
+T3-C-3 kalkfatt;115
+T3-C-4;167
+T3-C-4 intermed;30
+T3-C-5;223
+T3-C-5 intermed;55
+T3-C-6;67
+T3-C-6 intermed;10
+T3-C-7;59
+T3-C-7 svakt ka;11
+T3-C-8;70
+T3-C-8 svakt ka;15
+T3-C-9;34
+T3-C-9 svakt ka;3
+T30-C-1;2
+T30-C-1 flomsko;2
+T30-C-2;7
+T30-C-3;1
+T30-C-3 kildepå;1
+T31;4
+T31-C-1;84
+T31-C-1 kalkfat;12
+T31-C-11 sterkt;2
+T31-C-13;2
+T31-C-13 interm;1
+T31-C-14;1
+T31-C-2;193
+T31-C-2 kalkfat;33
+T31-C-3;23
+T31-C-3 kalkfat;2
+T31-C-4;24
+T31-C-5;24
+T31-C-7;13
+T31-C-8;2
+T32;7
+T32-C-1;32
+T32-C-1 kalkfat;6
+T32-C-10;5
+T32-C-13;1
+T32-C-15;2
+T32-C-2;11
+T32-C-2 kalkfat;2
+T32-C-20;9
+T32-C-3;58
+T32-C-3 interme;6
+T32-C-4;41
+T32-C-4 interme;3
+T32-C-5;15
+T32-C-5 svakt k;2
+T32-C-6;12
+T32-C-6 interme;2
+T32-C-9;17
+T33-C-2;1
+T33-C-2 øvre se;1
+T34;4
+T34-C-1;19
+T34-C-1 kalkfat;5
+T34-C-2;43
+T34-C-2 kalkfat;19
+T34-C-4;1
+T34-C-4 interme;1
+T35;13
+T35-C-1;69
+T35-C-1 sterkt ;21
+T35-C-2;76
+T35-C-2 sterkt ;15
+T35-C-3;1
+T36-C-1;38
+T36-C-1 sterkt ;3
+T36-C-2;1
+T36-C-3;7
+T37;1
+T37-C-2;28
+T37-C-2 asfalt ;9
+T37-C-3;1
+T37-C-3 avfalls;1
+T38;6
+T38-C-1;91
+T38-C-1 plantas;26
+T39;6
+T39-C-1;5
+T39-C-2;4
+T39-C-2 blottla;2
+T39-C-3;4
+T39-C-4;23
+T39-C-4 sterkt ;2
+T4;178
+T4-C-1;1974
+T4-C-1 blåbærsk;511
+T4-C-10;7
+T4-C-10 svak ly;2
+T4-C-11;2
+T4-C-11 lyng-lå;3
+T4-C-12;1
+T4-C-12 lyng-ka;1
+T4-C-13;104
+T4-C-13 lavskog;10
+T4-C-14;1
+T4-C-15;1
+T4-C-16;2
+T4-C-17;73
+T4-C-17 storbre;1
+T4-C-18;161
+T4-C-18 høgstau;15
+T4-C-19;27
+T4-C-19 litt tø;4
+T4-C-2;665
+T4-C-2 svak låg;117
+T4-C-3;181
+T4-C-3 lågurtsk;34
+T4-C-4;17
+T4-C-5;1476
+T4-C-5 bærlyngs;308
+T4-C-6;150
+T4-C-6 svak bær;17
+T4-C-7;38
+T4-C-7 bærlyng-;7
+T4-C-8;18
+T4-C-9;406
+T4-C-9 lyngskog;54
+T40;2
+T40-C-1;16
+T40-C-1 eng-akt;4
+T41;6
+T41-C-1;35
+T41-C-1 eng-akt;3
+T42-C-1;3
+T43;15
+T43-C-1;31
+T43-C-1 plener ;4
+T44;57
+T44-C-1;63
+T44-C-1 åker;5
+T45;12
+T45-C-1;52
+T45-C-1 oppdyrk;7
+T45-C-2;39
+T45-C-2 oppdyrk;9
+T45-C-3;48
+T45-C-3 oppdyrk;5
+T5-C-5;1
+T6;6
+T6-C-1;3
+T7;9
+T7-C-1;70
+T7-C-1 svært ka;20
+T7-C-10;4
+T7-C-10 kalkrik;9
+T7-C-11;4
+T7-C-11 vegetas;10
+T7-C-12;6
+T7-C-12 kildepå;4
+T7-C-13;8
+T7-C-2;130
+T7-C-2 svakt ka;30
+T7-C-3;105
+T7-C-3 intermed;19
+T7-C-4;149
+T7-C-4 intermed;55
+T7-C-5;30
+T7-C-5 intermed;4
+T7-C-6;43
+T7-C-6 svakt ka;17
+T7-C-7;18
+T7-C-7 svakt ka;6
+T7-C-8;8
+T7-C-9;4
+T7-C-9 sterkt k;7
+V;1
+V1;5
+V1-C-1;459
+V1-C-1 svært og;64
+V1-C-2;262
+V1-C-2 litt kal;29
+V1-C-3;107
+V1-C-3 sterkt i;15
+V1-C-4;36
+V1-C-4 temmelig;5
+V1-C-5;670
+V1-C-5 svært og;150
+V1-C-6;339
+V1-C-6 litt kal;69
+V1-C-7;84
+V1-C-7 sterkt i;18
+V1-C-8;17
+V1-C-8 temmelig;9
+V10-C-1;6
+V10-C-1 interme;2
+V10-C-2;1
+V10-C-3;1
+V11-C-1;3
+V11-C-1 kalkfat;1
+V12;2
+V12-C-1;25
+V12-C-1 grøftet;4
+V12-C-2;2
+V12-C-3;2
+V12-C-3 grøftet;15
+V13-C-1;1
+V2;1
+V2-C-1;191
+V2-C-1 kalkfatt;43
+V2-C-2;44
+V2-C-2 sterkt i;11
+V2-C-3;12
+V2-C-3 temmelig;2
+V3;8
+V3-C-1;98
+V3-C-1 ombrotro;16
+V3-C-2;152
+V3-C-2 ombrotro;36
+V4;1
+V4-C-1;7
+V4-C-1 litt kal;4
+V4-C-2;11
+V4-C-4;1
+V6-C-1;21
+V6-C-1 kalkfatt;8
+V6-C-2;3
+V6-C-2 kalkrikt;2
+V6-C-3;12
+V6-C-3 kalkfatt;3
+V6-C-4;5
+V6-C-5;2
+V6-C-5 kalkfatt;3
+V6-C-7;5
+V6-C-7 kalkfatt;1
+V6-C-9;1
+V8-C-1;2
+V8-C-2;1
+V9;1
+V9-C-1;14
+V9-C-2;3
+V9-C-3;10
+ikke_kartlagt;126
+NA;434

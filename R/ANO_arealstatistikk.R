@@ -1,9 +1,14 @@
 #### Arealstatistikk fra ANO
 
-# fix NiN information on hovedtyper
+# fix NiN information on hovedtyper - rute
 ANO.geo$hovedtype_rute <- substr(ANO.geo$kartleggingsenhet_1m2,1,3) # take the 3 first characters
 ANO.geo$hovedtype_rute <- gsub("-", "", ANO.geo$hovedtype_rute) # remove hyphon
 unique(as.factor(ANO.geo$hovedtype_rute))
+
+# fix NiN information on hovedtyper - sirkel
+ANO.geo$hovedtype_sirkel <- substr(ANO.geo$kartleggingsenhet_250m2,1,3) # take the 3 first characters
+ANO.geo$hovedtype_sirkel <- gsub("-", "", ANO.geo$hovedtype_sirkel) # remove hyphon
+unique(as.factor(ANO.geo$hovedtype_sirkel))
 
 # upload region-masken
 reg <- st_read("P:/41201785_okologisk_tilstand_2022_2023/data/regioner/regNorway_wgs84 - MERGED.shp")%>%
@@ -29,6 +34,15 @@ ANO_punktstat <- ANO.geo %>%
   st_drop_geometry()
 
 write.table(ANO_punktstat, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Output/ANO_punktstat.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
+
+ANO_punktstat_sirkel <- ANO.geo %>%
+  group_by(hovedtype_sirkel) %>%
+  count() %>%
+  #  pivot_wider(names_from = "region", values_from = "n") %>%
+  st_drop_geometry()
+
+write.table(ANO_punktstat_sirkel, file='C:/Users/joachim.topper/OneDrive - NINA/work/R projects/github/ANO_network_SATS/Output/ANO_punktstat_sirkel.txt',quote=FALSE,sep=";",col.names=TRUE,row.names=FALSE,dec=".")
+
 
 ANO_flatestat <- ANO.geo %>%
   group_by(hovedtype_rute) %>%
